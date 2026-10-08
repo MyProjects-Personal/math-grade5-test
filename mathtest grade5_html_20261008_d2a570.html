@@ -7,7 +7,7 @@
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { max-width: 900px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); padding: 30px 35px; position: relative; }
+        .container { max-width: 900px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); padding: 30px 35px; }
         h1 { text-align: center; color: #2d3748; font-weight: 600; font-size: 2rem; margin-top: 0; margin-bottom: 10px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
         .subhead { text-align: center; color: #4a5568; margin-bottom: 25px; font-size: 1rem; }
         .qr-btn-container { text-align: center; margin-bottom: 20px; }
@@ -19,7 +19,7 @@
         .qr-code-container { background: #f7fafc; padding: 20px; border-radius: 16px; display: inline-block; margin-bottom: 20px; border: 2px dashed #cbd5e0; }
         .qr-code-container img { display: block; width: 220px; height: 220px; }
         .qr-url-box { background: #edf2f7; padding: 10px 15px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; word-break: break-all; color: #4a5568; margin-bottom: 20px; }
-        .qr-close-btn, .qr-copy-btn { border: none; border-radius: 50px; padding: 10px 30px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .qr-close-btn, .qr-copy-btn { border: none; border-radius: 50px; padding: 10px 30px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
         .qr-close-btn { background: #e2e8f0; color: #2d3748; }
         .qr-copy-btn { background: #667eea; color: white; margin-right: 10px; }
         .info-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: #f7fafc; padding: 15px 20px; border-radius: 60px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
@@ -158,7 +158,6 @@
         </div>
     </div>
 
-    <!-- QR Modal -->
     <div class="qr-modal" id="qrModal">
         <div class="qr-modal-content">
             <h3>📱 Scan to Access the Test</h3>
@@ -170,7 +169,6 @@
         </div>
     </div>
 
-    <!-- Passcode Modal -->
     <div class="passcode-modal" id="passcodeModal">
         <div class="passcode-content">
             <h3>🔐 Teacher Access</h3>
@@ -184,10 +182,8 @@
         </div>
     </div>
 
-    <!-- Teacher FAB -->
     <button class="teacher-fab" id="teacherFab" title="Teacher Panel">👩‍🏫 Teacher Panel</button>
 
-    <!-- Teacher Modal -->
     <div class="modal" id="teacherPanel">
         <div class="modal-content">
             <div class="modal-header">
@@ -204,7 +200,7 @@
                     </div>
                 </div>
                 <div class="student-list" id="studentList">
-                    <div class="loading">Loading submissions from cloud...</div>
+                    <div class="loading">☁️ Loading from cloud...</div>
                 </div>
             </div>
 
@@ -229,32 +225,31 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
         // ============================================================
-        // ⚙️ STEP 1: PASTE YOUR FIREBASE CONFIG BELOW
-        // Get it from: console.firebase.google.com → Project Settings
+        // ✅ YOUR FIREBASE CONFIG (already filled in)
         // ============================================================
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDArRMrYrNNrbpDDTlQfq7tFHrsnVjQwmk",
+            authDomain: "math-test-1f01e.firebaseapp.com",
+            databaseURL: "https://math-test-1f01e-default-rtdb.firebaseio.com",
+            projectId: "math-test-1f01e",
+            storageBucket: "math-test-1f01e.firebasestorage.app",
+            messagingSenderId: "60937037210",
+            appId: "1:60937037210:web:91c2684048a842dac88623",
+            measurementId: "G-0E4V63BTF9"
         };
 
         // ============================================================
-        // 🔐 STEP 2: CHANGE YOUR TEACHER PASSCODE HERE
+        // 🔐 TEACHER PASSCODE — change this to your own secret code
         // ============================================================
-        const TEACHER_PASSCODE = "teach2024";  // ← change this!
+        const TEACHER_PASSCODE = "teach2024";
 
         // ============================================================
-        // Questions Data
+        // Questions Data (answers included in code — do NOT change)
         // ============================================================
         const questionsData = [
             { question: "John hasn't struck out since 18 days before Saturday. That day was a", options: ["Tuesday", "Sunday", "Saturday", "Monday"], correct: 0 },
@@ -319,11 +314,9 @@
         let studentAnswers = {};
         let correctionState = {};
         let currentStudentId = '';
-        let teacherButtonRevealed = false;
         let teacherUnlocked = false;
         let currentStudentData = null;
 
-        // ----- DOM -----
         const $ = id => document.getElementById(id);
         const studentNameInput = $('studentName');
         const timerDisplay = $('timerDisplay');
@@ -341,32 +334,21 @@
         // ----- Firebase Init -----
         function initFirebase() {
             try {
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY_HERE') {
-                    console.warn('⚠️ Firebase config not set. Running in offline mode.');
-                    updateCloudStatus('offline', 'Offline (config missing)');
-                    return;
-                }
                 firebase.initializeApp(firebaseConfig);
                 db = firebase.database();
                 firebaseReady = true;
                 updateCloudStatus('online', '● Cloud Connected');
-
-                // Test connection
                 db.ref('.info/connected').on('value', snap => {
-                    if (snap.val() === true) {
-                        updateCloudStatus('online', '● Cloud Connected');
-                    } else {
-                        updateCloudStatus('syncing', '● Reconnecting...');
-                    }
+                    updateCloudStatus(snap.val() === true ? 'online' : 'syncing',
+                        snap.val() === true ? '● Cloud Connected' : '● Reconnecting...');
                 });
             } catch (e) {
                 console.error('Firebase init error:', e);
                 updateCloudStatus('offline', '● Offline');
             }
         }
-
         function updateCloudStatus(type, text) {
-            cloudStatus.className = 'status-badge status-' + (type === 'online' ? 'online' : type === 'syncing' ? 'syncing' : 'offline');
+            cloudStatus.className = 'status-badge status-' + type;
             cloudStatus.textContent = text;
         }
 
@@ -383,9 +365,7 @@
                     const label = document.createElement('label');
                     label.className = 'option';
                     const radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = `q${index}`;
-                    radio.value = i;
+                    radio.type = 'radio'; radio.name = `q${index}`; radio.value = i;
                     radio.addEventListener('change', function() {
                         this.closest('.options').querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
                         this.closest('.option').classList.add('selected');
@@ -404,26 +384,20 @@
         // ----- Timer -----
         function startTimer() {
             if (timerInterval) clearInterval(timerInterval);
-            secondsElapsed = 0;
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                secondsElapsed++;
-                updateTimerDisplay();
-            }, 1000);
+            secondsElapsed = 0; updateTimerDisplay();
+            timerInterval = setInterval(() => { secondsElapsed++; updateTimerDisplay(); }, 1000);
         }
         function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
         function updateTimerDisplay() {
-            const m = Math.floor(secondsElapsed / 60);
-            const s = secondsElapsed % 60;
+            const m = Math.floor(secondsElapsed / 60), s = secondsElapsed % 60;
             timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
         function formatTime(sec) {
-            const m = Math.floor(sec / 60);
-            const s = sec % 60;
+            const m = Math.floor(sec / 60), s = sec % 60;
             return m === 0 ? `${s} seconds` : `${m} min ${s} sec`;
         }
 
-        // ----- Submit Test -----
+        // ----- Submit -----
         async function submitTest() {
             if (quizSubmitted) return;
             const name = studentNameInput.value.trim();
@@ -443,32 +417,25 @@
 
             const studentId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
             const submission = {
-                id: studentId,
-                name: name,
-                timestamp: Date.now(),
-                timeTaken: secondsElapsed,
-                autoScore: autoScore,
-                total: questionsData.length,
-                answers: studentAnswers,
-                corrected: false,
-                finalScore: autoScore
+                id: studentId, name, timestamp: Date.now(),
+                timeTaken: secondsElapsed, autoScore,
+                total: questionsData.length, answers: studentAnswers,
+                corrected: false, finalScore: autoScore
             };
 
-            // Save to Firebase
             if (firebaseReady && db) {
                 try {
                     cloudSaveStatus.textContent = '☁️ Saving to cloud...';
                     await db.ref('submissions/' + studentId).set(submission);
                     cloudSaveStatus.innerHTML = '<span style="color:#38a169;">✅ Saved to cloud successfully</span>';
                 } catch (e) {
-                    console.error('Cloud save failed:', e);
-                    cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud save failed. Ask teacher to check connection.</span>';
+                    console.error(e);
+                    cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud save failed.</span>';
                 }
             } else {
-                cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud not configured. Test not saved.</span>';
+                cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud not connected.</span>';
             }
 
-            // Display result
             studentNameDisplay.textContent = `Student: ${name}`;
             scoreDisplay.textContent = autoScore;
             totalDisplay.textContent = questionsData.length;
@@ -481,51 +448,38 @@
             resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // ----- Reset -----
         function resetTest() {
-            stopTimer();
-            secondsElapsed = 0;
-            updateTimerDisplay();
-            quizSubmitted = false;
-            autoScore = 0;
-            studentAnswers = {};
-            currentStudentId = '';
+            stopTimer(); secondsElapsed = 0; updateTimerDisplay();
+            quizSubmitted = false; autoScore = 0; studentAnswers = {}; currentStudentId = '';
             document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; el.disabled = false; });
             document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
-            studentNameInput.value = '';
-            studentNameInput.disabled = false;
-            resultBox.style.display = 'none';
-            submitBtn.disabled = false;
+            studentNameInput.value = ''; studentNameInput.disabled = false;
+            resultBox.style.display = 'none'; submitBtn.disabled = false;
             cloudSaveStatus.textContent = '';
-            startTimer();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            startTimer(); window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ----- QR Code -----
+        // ----- QR -----
         function generateQRCode() {
             const url = window.location.href;
             $('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
             $('qrUrlBox').textContent = url;
         }
 
-        // ----- Teacher Passcode -----
+        // ----- Passcode -----
         function showPasscodeModal() {
-            $('passcodeInput').value = '';
-            $('passcodeError').textContent = '';
+            $('passcodeInput').value = ''; $('passcodeError').textContent = '';
             $('passcodeModal').classList.add('active');
             setTimeout(() => $('passcodeInput').focus(), 100);
         }
-
         function verifyPasscode() {
-            const entered = $('passcodeInput').value.trim();
-            if (entered === TEACHER_PASSCODE) {
+            if ($('passcodeInput').value.trim() === TEACHER_PASSCODE) {
                 teacherUnlocked = true;
                 $('passcodeModal').classList.remove('active');
                 openTeacherPanel();
             } else {
                 $('passcodeError').textContent = '❌ Incorrect passcode. Try again.';
-                $('passcodeInput').value = '';
-                $('passcodeInput').focus();
+                $('passcodeInput').value = ''; $('passcodeInput').focus();
             }
         }
 
@@ -535,112 +489,77 @@
             $('teacherPanel').classList.add('active');
             showStudentList();
         }
-
         function showStudentList() {
             $('studentListView').style.display = 'block';
             $('studentDetailView').style.display = 'none';
             loadStudentsFromCloud();
         }
-
         function loadStudentsFromCloud() {
             if (!firebaseReady || !db) {
-                $('studentList').innerHTML = '<div class="no-students">⚠️ Cloud not connected. Cannot load students.</div>';
+                $('studentList').innerHTML = '<div class="no-students">⚠️ Cloud not connected.</div>';
                 return;
             }
             $('studentList').innerHTML = '<div class="loading">☁️ Loading from cloud...</div>';
-            db.ref('submissions').on('value', snapshot => {
-                const data = snapshot.val() || {};
-                renderStudentList(data);
-            }, error => {
-                console.error('Read error:', error);
-                $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading from cloud.</div>';
-            });
+            db.ref('submissions').on('value', snapshot => renderStudentList(snapshot.val() || {}),
+                error => { $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading.</div>'; });
         }
-
         function renderStudentList(data) {
             const filter = ($('searchInput').value || '').toLowerCase().trim();
             let list = Object.values(data);
             if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter));
             list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
             $('studentCount').textContent = list.length;
-            const container = $('studentList');
-            container.innerHTML = '';
-
+            const container = $('studentList'); container.innerHTML = '';
             if (list.length === 0) {
-                container.innerHTML = '<div class="no-students">No tests submitted yet.</div>';
-                return;
+                container.innerHTML = '<div class="no-students">No tests submitted yet.</div>'; return;
             }
-
             list.forEach(s => {
                 const card = document.createElement('div');
                 card.className = 'student-card';
                 if (s.id === currentStudentId) card.classList.add('active');
-                const correctedLabel = s.corrected
-                    ? '<span class="s-corrected">✓ Corrected</span>'
-                    : '<span style="color:#a0aec0;">Pending</span>';
+                const correctedLabel = s.corrected ? '<span class="s-corrected">✓ Corrected</span>' : '<span style="color:#a0aec0;">Pending</span>';
                 card.innerHTML = `
-                    <div class="s-name">
-                        <span>${escapeHtml(s.name)}</span>
-                        <span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span>
-                    </div>
-                    <div class="s-meta">
-                        <span>${new Date(s.timestamp).toLocaleString()}</span>
-                        ${correctedLabel}
-                    </div>
+                    <div class="s-name"><span>${escapeHtml(s.name)}</span><span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span></div>
+                    <div class="s-meta"><span>${new Date(s.timestamp).toLocaleString()}</span>${correctedLabel}</div>
                 `;
                 card.addEventListener('click', () => showStudentDetail(s));
                 container.appendChild(card);
             });
         }
-
         function showStudentDetail(student) {
             currentStudentId = student.id;
             currentStudentData = student;
             studentAnswers = student.answers || {};
             correctionState = student.corrections || {};
             autoScore = student.autoScore;
-
             questionsData.forEach((q, i) => {
                 if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === q.correct);
             });
-
             $('teacherStudentName').textContent = student.name;
             $('teacherAutoScore').textContent = `${student.autoScore} / ${questionsData.length}`;
             $('teacherTimeTaken').textContent = formatTime(student.timeTaken);
-            renderTeacherCorrectionList();
-            updateAdjustedScore();
-
+            renderTeacherCorrectionList(); updateAdjustedScore();
             $('studentListView').style.display = 'none';
             $('studentDetailView').style.display = 'block';
         }
-
         function renderTeacherCorrectionList() {
-            const container = $('teacherQuestionsContainer');
-            container.innerHTML = '';
+            const container = $('teacherQuestionsContainer'); container.innerHTML = '';
             questionsData.forEach((q, i) => {
-                const studentAns = studentAnswers[i];
-                const studentAnsText = studentAns >= 0 ? q.options[studentAns] : 'Not Answered';
-                const correctAnsText = q.options[q.correct];
+                const sa = studentAnswers[i];
+                const saText = sa >= 0 ? q.options[sa] : 'Not Answered';
                 const row = document.createElement('div');
                 row.className = 'teacher-question-row';
                 row.innerHTML = `
                     <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.question.replace(/<[^>]*>/g, '').substring(0, 100)}${q.question.length > 100 ? '...' : ''}</div>
                     <div class="teacher-ans-detail">
-                        <span>Student: <span class="student-ans">${escapeHtml(studentAnsText)}</span></span>
-                        <span>Correct: <span class="correct-ans">${escapeHtml(correctAnsText)}</span></span>
-                        <span class="teacher-toggle">
-                            <input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}>
-                            <span>Mark Correct</span>
-                        </span>
+                        <span>Student: <span class="student-ans">${escapeHtml(saText)}</span></span>
+                        <span>Correct: <span class="correct-ans">${escapeHtml(q.options[q.correct])}</span></span>
+                        <span class="teacher-toggle"><input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}><span>Mark Correct</span></span>
                     </div>
-                    <div class="teacher-feedback">
-                        <input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}">
-                    </div>
+                    <div class="teacher-feedback"><input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}"></div>
                 `;
                 container.appendChild(row);
             });
-
             container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
                 cb.addEventListener('change', function() {
                     correctionState[parseInt(this.dataset.index)] = this.checked;
@@ -648,90 +567,63 @@
                 });
             });
         }
-
         function updateAdjustedScore() {
-            let adjusted = 0;
-            Object.keys(correctionState).forEach(k => { if (correctionState[k]) adjusted++; });
-            $('teacherAdjustedScore').textContent = `${adjusted} / ${questionsData.length}`;
-            $('teacherFinalScore').textContent = adjusted;
+            let adj = 0; Object.keys(correctionState).forEach(k => { if (correctionState[k]) adj++; });
+            $('teacherAdjustedScore').textContent = `${adj} / ${questionsData.length}`;
+            $('teacherFinalScore').textContent = adj;
         }
-
         async function saveCorrection() {
-            if (!currentStudentId || !firebaseReady) { alert('Cannot save. Cloud not connected.'); return; }
+            if (!currentStudentId || !firebaseReady) { alert('Cannot save.'); return; }
             const feedbacks = {};
             document.querySelectorAll('.teacher-feedback input').forEach(input => {
                 feedbacks[parseInt(input.dataset.index)] = input.value.trim();
             });
             let finalScore = 0;
             Object.keys(correctionState).forEach(k => { if (correctionState[k]) finalScore++; });
-
             try {
                 await db.ref('submissions/' + currentStudentId).update({
-                    corrections: correctionState,
-                    feedbacks: feedbacks,
-                    corrected: true,
-                    finalScore: finalScore,
-                    correctedAt: Date.now()
+                    corrections: correctionState, feedbacks, corrected: true,
+                    finalScore, correctedAt: Date.now()
                 });
-                alert(`✅ Correction saved to cloud for ${currentStudentData.name}!\nFinal Score: ${finalScore} / ${questionsData.length}`);
-            } catch (e) {
-                console.error(e);
-                alert('Error saving correction to cloud.');
-            }
+                alert(`✅ Correction saved for ${currentStudentData.name}!\nFinal Score: ${finalScore} / ${questionsData.length}`);
+            } catch (e) { alert('Error saving.'); }
         }
-
         function printCorrectionReport() {
             if (!currentStudentData) return;
             const s = currentStudentData;
             const w = window.open('', '_blank', 'width=900,height=700');
-            let html = `<html><head><title>Correction Report - ${escapeHtml(s.name)}</title>
+            let html = `<html><head><title>Report - ${escapeHtml(s.name)}</title>
                 <style>body{font-family:Arial;padding:20px}.summary{background:#fffaf0;padding:15px;border-radius:8px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.correct{color:#276749;font-weight:bold}.incorrect{color:#c53030;font-weight:bold}.feedback{font-style:italic;color:#4a5568;font-size:0.85rem}</style></head><body>
-                <h1>📝 Correction Report</h1>
-                <div class="summary">
-                    <p><b>Student:</b> ${escapeHtml(s.name)}</p>
-                    <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
-                    <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
-                    <p><b>Time Taken:</b> ${formatTime(s.timeTaken)}</p>
-                    <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p>
-                </div>
-                <table><thead><tr><th>#</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
+                <h1>📝 Correction Report</h1><div class="summary">
+                <p><b>Student:</b> ${escapeHtml(s.name)}</p>
+                <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
+                <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
+                <p><b>Time:</b> ${formatTime(s.timeTaken)}</p>
+                <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p></div>
+                <table><thead><tr><th>#</th><th>Question</th><th>Student</th><th>Correct</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
             questionsData.forEach((q, i) => {
                 const sa = s.answers[i];
                 const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === q.correct);
-                const feedback = (s.feedbacks && s.feedbacks[i]) || '';
-                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'Not Answered')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅ Correct' : '❌ Incorrect'}</td><td class="feedback">${escapeHtml(feedback)}</td></tr>`;
+                const fb = (s.feedbacks && s.feedbacks[i]) || '';
+                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'N/A')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅' : '❌'}</td><td class="feedback">${escapeHtml(fb)}</td></tr>`;
             });
-            html += `</tbody></table><p style="margin-top:20px;font-size:0.8rem;color:#888;">Generated on ${new Date().toLocaleString()}</p></body></html>`;
-            w.document.write(html);
-            w.document.close();
+            html += `</tbody></table></body></html>`;
+            w.document.write(html); w.document.close();
             setTimeout(() => w.print(), 500);
         }
-
         async function deleteCurrentStudent() {
             if (!currentStudentId || !firebaseReady) return;
-            if (!confirm(`Delete test for "${currentStudentData.name}" from cloud? This cannot be undone.`)) return;
-            try {
-                await db.ref('submissions/' + currentStudentId).remove();
-                currentStudentId = '';
-                currentStudentData = null;
-                showStudentList();
-            } catch (e) {
-                alert('Error deleting from cloud.');
-            }
+            if (!confirm(`Delete test for "${currentStudentData.name}"?`)) return;
+            try { await db.ref('submissions/' + currentStudentId).remove(); currentStudentId = ''; currentStudentData = null; showStudentList(); }
+            catch (e) { alert('Error deleting.'); }
         }
-
         async function clearAllSubmissions() {
-            if (!firebaseReady) { alert('Cloud not connected.'); return; }
-            if (!confirm('⚠️ Delete ALL submissions from the cloud? This cannot be undone.')) return;
-            if (!confirm('Are you REALLY sure? This will wipe all student tests.')) return;
-            try {
-                await db.ref('submissions').remove();
-                showStudentList();
-            } catch (e) {
-                alert('Error clearing cloud data.');
-            }
+            if (!firebaseReady) return;
+            if (!confirm('⚠️ Delete ALL submissions from cloud?')) return;
+            if (!confirm('Are you REALLY sure?')) return;
+            try { await db.ref('submissions').remove(); showStudentList(); }
+            catch (e) { alert('Error.'); }
         }
-
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
@@ -740,7 +632,6 @@
         // ----- Event Listeners -----
         submitBtn.addEventListener('click', submitTest);
         resetBtn.addEventListener('click', resetTest);
-
         $('qrBtn').addEventListener('click', () => { generateQRCode(); $('qrModal').classList.add('active'); });
         $('qrCloseBtn').addEventListener('click', () => $('qrModal').classList.remove('active'));
         $('copyUrlBtn').addEventListener('click', () => {
@@ -750,35 +641,26 @@
             });
         });
         $('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').classList.remove('active'); });
-
         $('teacherFab').addEventListener('click', openTeacherPanel);
         $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
         $('backBtn').addEventListener('click', showStudentList);
         $('searchInput').addEventListener('input', () => {
-            if (firebaseReady && db) {
-                db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
-            }
+            if (firebaseReady && db) db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
         });
         $('clearAllBtn').addEventListener('click', clearAllSubmissions);
         $('saveCorrectionBtn').addEventListener('click', saveCorrection);
         $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
         $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
-
         $('passcodeSubmit').addEventListener('click', verifyPasscode);
         $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
         $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
-
-        // Keyboard shortcut for teacher
         document.addEventListener('keydown', e => {
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'T' || e.key === 't')) {
                 e.preventDefault();
-                teacherButtonRevealed = true;
                 $('teacherFab').classList.add('visible');
-                if (teacherUnlocked) openTeacherPanel();
-                else showPasscodeModal();
+                if (teacherUnlocked) openTeacherPanel(); else showPasscodeModal();
             }
         });
-
         $('teacherPanel').addEventListener('click', e => { if (e.target === $('teacherPanel')) $('teacherPanel').classList.remove('active'); });
         studentNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
 
