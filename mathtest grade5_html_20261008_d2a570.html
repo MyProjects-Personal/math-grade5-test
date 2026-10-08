@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade 5 Test Paper - Online Quiz</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { max-width: 900px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); padding: 30px 35px; position: relative; }
+        h1 { text-align: center; color: #2d3748; font-weight: 600; font-size: 2rem; margin-top: 0; margin-bottom: 10px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+        .subhead { text-align: center; color: #4a5568; margin-bottom: 25px; font-size: 1rem; }
+        .qr-btn-container { text-align: center; margin-bottom: 20px; }
+        .qr-btn { background: #48bb78; color: white; border: none; border-radius: 50px; padding: 12px 30px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(72,187,120,0.4); transition: 0.2s; }
+        .qr-btn:hover { background: #38a169; transform: translateY(-2px); }
+        .qr-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .qr-modal.active { display: flex; }
+        .qr-modal-content { background: white; border-radius: 24px; padding: 30px; text-align: center; max-width: 400px; width: 100%; }
+        .qr-code-container { background: #f7fafc; padding: 20px; border-radius: 16px; display: inline-block; margin-bottom: 20px; border: 2px dashed #cbd5e0; }
+        .qr-code-container img { display: block; width: 220px; height: 220px; }
+        .qr-url-box { background: #edf2f7; padding: 10px 15px; border-radius: 8px; font-family: monospace; font-size: 0.8rem; word-break: break-all; color: #4a5568; margin-bottom: 20px; }
+        .qr-close-btn, .qr-copy-btn { border: none; border-radius: 50px; padding: 10px 30px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .qr-close-btn { background: #e2e8f0; color: #2d3748; }
+        .qr-copy-btn { background: #667eea; color: white; margin-right: 10px; }
+        .info-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: #f7fafc; padding: 15px 20px; border-radius: 60px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+        .info-bar input { border: 1px solid #cbd5e0; border-radius: 30px; padding: 12px 20px; font-size: 1rem; width: 280px; outline: none; }
+        .info-bar input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.2); }
+        .timer-box { font-size: 1.4rem; font-weight: 700; color: #2d3748; background: #edf2f7; padding: 8px 24px; border-radius: 40px; }
+        .timer-box span { color: #e53e3e; }
+        .question-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 25px; margin-bottom: 20px; }
+        .question-text { font-size: 1.1rem; font-weight: 500; color: #1a202c; margin-bottom: 15px; line-height: 1.5; }
+        .question-text img { max-width: 100%; height: auto; margin: 8px 0; border-radius: 8px; }
+        .options { display: flex; flex-wrap: wrap; gap: 12px; }
+        .option { display: flex; align-items: center; background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 40px; padding: 10px 20px; cursor: pointer; transition: 0.2s; flex: 1 0 180px; font-size: 1rem; user-select: none; }
+        .option:hover { background: #ebf4ff; border-color: #90cdf4; }
+        .option input[type="radio"] { margin-right: 12px; accent-color: #667eea; width: 18px; height: 18px; cursor: pointer; }
+        .option.selected { background: #ebf4ff; border-color: #667eea; box-shadow: 0 0 0 2px rgba(102,126,234,0.3); }
+        .btn-group { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
+        .btn { padding: 14px 40px; font-size: 1.1rem; font-weight: 600; border: none; border-radius: 50px; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: #667eea; color: white; box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+        .btn-primary:hover { background: #5a67d8; transform: translateY(-2px); }
+        .btn-secondary { background: #e2e8f0; color: #2d3748; }
+        .btn-secondary:hover { background: #cbd5e0; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .result-box { display: none; background: #f0fff4; border: 2px solid #68d391; border-radius: 20px; padding: 25px; margin-top: 30px; text-align: center; }
+        .result-box h2 { color: #276749; margin-top: 0; }
+        .result-box p { font-size: 1.3rem; color: #2f855a; }
+        .result-box .score { font-size: 2.5rem; font-weight: 800; color: #38a169; }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #2d3748; margin: 35px 0 20px 0; padding-bottom: 8px; border-bottom: 2px dashed #cbd5e0; }
+        .teacher-fab { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 999; background: #ed8936; color: white; border: none; border-radius: 50px; padding: 15px 28px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(237,137,54,0.5); animation: pulse 2s infinite; }
+        .teacher-fab.visible { display: block; }
+        .teacher-fab:hover { background: #dd6b20; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(237,137,54,0.7); } 70% { box-shadow: 0 0 0 15px rgba(237,137,54,0); } 100% { box-shadow: 0 0 0 0 rgba(237,137,54,0); } }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 24px; max-width: 950px; width: 100%; padding: 30px 35px; margin: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #ed8936; padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header h2 { margin: 0; color: #c05621; font-size: 1.6rem; }
+        .close-btn { background: #fed7d7; color: #c53030; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.4rem; cursor: pointer; font-weight: bold; }
+        .close-btn:hover { background: #fc8181; color: white; }
+        .student-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .student-list-header h3 { margin: 0; color: #2d3748; }
+        .search-input { border: 1px solid #cbd5e0; border-radius: 30px; padding: 8px 18px; font-size: 0.9rem; outline: none; width: 200px; }
+        .search-input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.2); }
+        .clear-all-btn { background: #fed7d7; color: #c53030; border: none; border-radius: 30px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+        .clear-all-btn:hover { background: #fc8181; color: white; }
+        .student-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; max-height: 350px; overflow-y: auto; padding: 5px; }
+        .student-card { background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; cursor: pointer; transition: 0.2s; }
+        .student-card:hover { border-color: #667eea; background: #ebf4ff; transform: translateY(-2px); }
+        .student-card.active { border-color: #ed8936; background: #fffaf0; }
+        .student-card .s-name { font-weight: 700; color: #2d3748; font-size: 1rem; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .student-card .s-name .s-score { background: #48bb78; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; }
+        .student-card .s-meta { font-size: 0.75rem; color: #718096; display: flex; justify-content: space-between; }
+        .student-card .s-meta .s-corrected { color: #ed8936; font-weight: 700; }
+        .no-students { text-align: center; color: #a0aec0; padding: 30px; font-style: italic; grid-column: 1 / -1; }
+        .teacher-summary { background: #fffaf0; border: 1px solid #fbd38d; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; }
+        .teacher-summary span { font-weight: 600; color: #7b341e; }
+        .teacher-summary .val { color: #c05621; }
+        .teacher-question-row { border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
+        .teacher-q-text { font-size: 0.95rem; color: #2d3748; font-weight: 500; margin-bottom: 8px; }
+        .teacher-ans-detail { font-size: 0.85rem; color: #4a5568; display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
+        .teacher-ans-detail .student-ans { color: #2b6cb0; font-weight: 600; }
+        .teacher-ans-detail .correct-ans { color: #276749; font-weight: 600; }
+        .teacher-toggle { margin-left: auto; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; }
+        .teacher-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: #48bb78; cursor: pointer; }
+        .teacher-feedback { margin-top: 8px; }
+        .teacher-feedback input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; }
+        .teacher-actions { display: flex; gap: 15px; justify-content: flex-end; margin-top: 25px; flex-wrap: wrap; }
+        .btn-orange { background: #ed8936; color: white; }
+        .btn-orange:hover { background: #dd6b20; }
+        .btn-sm { padding: 10px 24px; font-size: 0.95rem; }
+        .teacher-result-override { margin-top: 15px; padding: 15px; background: #ebf8ff; border-radius: 12px; text-align: center; font-size: 1.2rem; font-weight: 700; color: #2b6cb0; }
+        .teacher-result-override span { color: #2f855a; }
+        .back-btn { background: #e2e8f0; color: #2d3748; border: none; border-radius: 30px; padding: 8px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 15px; }
+        .back-btn:hover { background: #cbd5e0; }
+        .loading { text-align: center; padding: 40px; color: #718096; }
+        .passcode-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
+        .passcode-modal.active { display: flex; }
+        .passcode-content { background: white; border-radius: 20px; padding: 35px; max-width: 380px; width: 100%; text-align: center; }
+        .passcode-content h3 { margin-top: 0; color: #2d3748; }
+        .passcode-content input { width: 100%; padding: 14px 18px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 1rem; outline: none; margin-bottom: 15px; text-align: center; letter-spacing: 2px; }
+        .passcode-content input:focus { border-color: #667eea; }
+        .passcode-content .error { color: #e53e3e; font-size: 0.85rem; margin-bottom: 10px; min-height: 18px; }
+        .passcode-actions { display: flex; gap: 10px; }
+        .passcode-actions button { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+        .passcode-submit { background: #667eea; color: white; }
+        .passcode-submit:hover { background: #5a67d8; }
+        .passcode-cancel { background: #e2e8f0; color: #2d3748; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
+        .status-online { background: #c6f6d5; color: #22543d; }
+        .status-offline { background: #fed7d7; color: #742a2a; }
+        .status-syncing { background: #fefcbf; color: #744210; }
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 1.5rem; }
+            .info-bar { flex-direction: column; gap: 12px; align-items: stretch; }
+            .info-bar input { width: 100%; }
+            .option { flex: 1 0 100%; }
+            .btn { width: 100%; }
+            .student-list { grid-template-columns: 1fr; }
+            .modal-content { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Grade 5 Test Paper</h1>
+        <div class="subhead">
+            Mathematical Reasoning & Everyday Mathematics
+            <span id="cloudStatus" class="status-badge status-offline">● Connecting...</span>
+        </div>
+
+        <div class="qr-btn-container">
+            <button class="qr-btn" id="qrBtn">📱 Show QR Code for Students</button>
+        </div>
+
+        <div class="info-bar">
+            <input type="text" id="studentName" placeholder="Enter your full name" autocomplete="off">
+            <div class="timer-box">⏱ <span id="timerDisplay">00:00</span></div>
+        </div>
+
+        <form id="quizForm" onsubmit="return false;">
+            <div class="section-title">Section 01: Mathematical Reasoning</div>
+            <div id="questionsContainer"></div>
+        </form>
+
+        <div class="btn-group">
+            <button class="btn btn-primary" id="submitBtn" type="button">✅ Submit Test</button>
+            <button class="btn btn-secondary" id="resetBtn" type="button">🔄 Reset</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <h2>📊 Test Completed!</h2>
+            <p id="studentNameDisplay"></p>
+            <p>Your Score: <span class="score" id="scoreDisplay">0</span> / <span id="totalDisplay">0</span></p>
+            <p id="timeTakenDisplay" style="font-size:1rem; color:#4a5568;"></p>
+            <p id="cloudSaveStatus" style="font-size:0.9rem; color:#718096;"></p>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div class="qr-modal" id="qrModal">
+        <div class="qr-modal-content">
+            <h3>📱 Scan to Access the Test</h3>
+            <p>Point your phone camera at the QR code below.</p>
+            <div class="qr-code-container"><img id="qrImage" src="" alt="QR Code"></div>
+            <div class="qr-url-box" id="qrUrlBox">Loading...</div>
+            <button class="qr-copy-btn" id="copyUrlBtn">📋 Copy Link</button>
+            <button class="qr-close-btn" id="qrCloseBtn">Close</button>
+        </div>
+    </div>
+
+    <!-- Passcode Modal -->
+    <div class="passcode-modal" id="passcodeModal">
+        <div class="passcode-content">
+            <h3>🔐 Teacher Access</h3>
+            <p style="color:#718096; font-size:0.9rem;">Enter passcode to continue</p>
+            <input type="password" id="passcodeInput" placeholder="••••••••" autocomplete="off">
+            <div class="error" id="passcodeError"></div>
+            <div class="passcode-actions">
+                <button class="passcode-cancel" id="passcodeCancel">Cancel</button>
+                <button class="passcode-submit" id="passcodeSubmit">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher FAB -->
+    <button class="teacher-fab" id="teacherFab" title="Teacher Panel">👩‍🏫 Teacher Panel</button>
+
+    <!-- Teacher Modal -->
+    <div class="modal" id="teacherPanel">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>👩‍🏫 Teacher Correction Panel</h2>
+                <button class="close-btn" id="closeTeacherPanel">×</button>
+            </div>
+
+            <div id="studentListView">
+                <div class="student-list-header">
+                    <h3>📋 Submitted Tests (<span id="studentCount">0</span>)</h3>
+                    <div>
+                        <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by name...">
+                        <button class="clear-all-btn" id="clearAllBtn" style="margin-left:8px;">🗑️ Clear All</button>
+                    </div>
+                </div>
+                <div class="student-list" id="studentList">
+                    <div class="loading">Loading submissions from cloud...</div>
+                </div>
+            </div>
+
+            <div id="studentDetailView" style="display:none;">
+                <button class="back-btn" id="backBtn">← Back to Student List</button>
+                <div class="teacher-summary">
+                    <div>Student: <span class="val" id="teacherStudentName">—</span></div>
+                    <div>Auto Score: <span class="val" id="teacherAutoScore">—</span></div>
+                    <div>Adjusted Score: <span class="val" id="teacherAdjustedScore">—</span></div>
+                    <div>Time Taken: <span class="val" id="teacherTimeTaken">—</span></div>
+                </div>
+                <div id="teacherQuestionsContainer"></div>
+                <div class="teacher-result-override">
+                    Final Adjusted Score: <span id="teacherFinalScore">0</span> / <span id="teacherTotalQ">0</span>
+                </div>
+                <div class="teacher-actions">
+                    <button class="btn btn-orange btn-sm" id="saveCorrectionBtn">💾 Save Correction</button>
+                    <button class="btn btn-secondary btn-sm" id="printCorrectionBtn">🖨️ Print Report</button>
+                    <button class="btn btn-secondary btn-sm" id="deleteStudentBtn" style="background:#fed7d7;color:#c53030;">🗑️ Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        // ============================================================
+        // ⚙️ STEP 1: PASTE YOUR FIREBASE CONFIG BELOW
+        // Get it from: console.firebase.google.com → Project Settings
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // ============================================================
+        // 🔐 STEP 2: CHANGE YOUR TEACHER PASSCODE HERE
+        // ============================================================
+        const TEACHER_PASSCODE = "teach2024";  // ← change this!
+
+        // ============================================================
+        // Questions Data
+        // ============================================================
+        const questionsData = [
+            { question: "John hasn't struck out since 18 days before Saturday. That day was a", options: ["Tuesday", "Sunday", "Saturday", "Monday"], correct: 0 },
+            { question: "In the following question, select the missing number from the given series.<br>33, 10, 43, 53, 96, ?", options: ["150", "163", "171", "149"], correct: 0 },
+            { question: "(2 + 3 + 4) × 10 = 40 + 30 +", options: ["20", "15", "23", "40"], correct: 0 },
+            { question: "A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.<br>AB, CD, EF, GH, ?", options: ["HJ", "HK", "IJ", "JI"], correct: 0 },
+            { question: "I listened to 6 songs before the one I'm listening to now, and I will listen to 6 more after this one. Altogether, that's ______ songs.", options: ["10", "15", "13", "18"], correct: 2 },
+            { question: "In the following question, select the odd word pair from the given alternatives.", options: ["Room: House", "Page: Book", "Engine: Car", "Food: Hunger"], correct: 3 },
+            { question: "50 hundreds ÷ 5 tens =", options: ["1", "100", "10", "100"], correct: 1 },
+            { question: "P, Q, R, S and T are sitting in a line facing west. P and Q are sitting together. R is sitting at south end and S is sitting at north end. T is neighbour of Q and R. Who is sitting in the middle?", options: ["P", "Q", "R", "S"], correct: 1 },
+            { question: "9 + 99 + 999 = 9 ×", options: ["123", "115", "110", "123"], correct: 0 },
+            { question: "If a mirror is placed on the line AB, then which of the answer figure is the right image of the given figure?<br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMTAiIHkxPSI1MCIgeDI9IjkwIiB5Mj0iNTAiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMSIvPjxsaW5lIHgxPSI1MCIgeTE9IjEwIiB4Mj0iNTAiIHkyPSI5MCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBvbHlnb24gcG9pbnRzPSI1MCw1MCA3MCw1MCA1MCw3MCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=' style='max-width:100px;'><br>Options: (A) (B) (C) (D)", options: ["A", "B", "C", "D"], correct: 3 },
+            { question: "In each step the elements shift from left to right in a cyclic order...", options: ["LROWC", "PROWV", "VROWC", "CROWV"], correct: 2 },
+            { question: "Which one will replace the question mark?<br>A. 262, B. 622, C. 631, D. 824", options: ["262", "622", "631", "824"], correct: 1 },
+            { question: "Arrange the following words in a meaningful order:<br>1. Gold, 2. Iron, 3. Sand, 4. Platinum, 5. Diamond", options: ["3 2 1 5 4", "2 4 3 5 1", "5 4 3 2 1", "4 5 1 3 2"], correct: 0 },
+            { question: "Which one number is wrong in the following series?<br>42, 110, 132, 210, 440, 506", options: ["42", "132", "440", "506"], correct: 3 },
+            { question: "Boat: Ore :: Bicycle : ?", options: ["Pedal", "Seat", "Road", "Wheel"], correct: 0 },
+            { question: "I created 40 characters, 4 for each video game I own. That means I own ______ video games.", options: ["10", "53", "50", "80"], correct: 0 },
+            { question: "If I add the number of sides that a hexagon has to the number of sides that a ______ has, then the sum is odd.", options: ["hexagon", "cube", "pentagon", "rectangle"], correct: 2 },
+            { question: "50 + 30 × 20 + 20 × 0 =", options: ["10", "120", "650", "1500"], correct: 2 },
+            { question: "My older brother is 6 years older than I am, and the sum of our ages is 30. How old is my older brother?", options: ["22", "35", "18", "31"], correct: 2 },
+            { question: "Tony paid for 5 tropical punches with a $50 bill and got $16 in change. He paid ______ per tropical punch.", options: ["6.20", "6.80", "7.20", "9.80"], correct: 1 },
+            { question: "The average of two dozen and three dozen is", options: ["12", "30", "34", "46"], correct: 1 },
+            { question: "At normal speed, it takes Manuel exactly one hour and 46 minutes to play a trombone concerto. Playing at twice that speed, it would take Manuel ______ minutes to play the concerto.", options: ["53", "40", "85", "112"], correct: 0 },
+            { question: "If I double ______ and then subtract 50, I get 160.", options: ["150", "100", "50", "105"], correct: 3 },
+            { question: "There are a total of 2013 students enrolled at 8 high schools. If there are 234 students at each of 4 of the schools, then there are a total of ______ students at the other 4 schools.", options: ["1077", "1023", "1334", "1543"], correct: 0 },
+            { question: "Three different maths books are arranged in a line on my table. In how many different orders can these maths books be arranged?", options: ["7", "8", "9", "6"], correct: 3 },
+            { question: "A square piece of paper has a perimeter of 36 cm. What is the area of a square piece of paper with twice that perimeter?", options: ["62 cm²", "81 cm²", "169 cm²", "324 cm²"], correct: 3 },
+            { question: "Brad mixes seeds... how much of each kg of Master mix is Blue mix?", options: ["450 g", "480 g", "600 g", "750 g"], correct: 2 },
+            { question: "Of the following, ______ has the greatest number of whole number factors.", options: ["8", "10", "12", "14"], correct: 2 },
+            { question: "The least common multiple of 10 and 24 plus the greatest common factor of 10 and 24 equals", options: ["123", "122", "242", "256"], correct: 1 },
+            { question: "There are 7 cars for every 4 trucks parked in a lot. If there is a total of 110 cars and trucks parked in the lot, there are ______ cars.", options: ["15", "78", "70", "90"], correct: 2 },
+            { question: "Jon is skiing at a rate of 600 m/min. That equals a rate of ______ cm/sec.", options: ["1200", "1500", "1000", "40 000"], correct: 2 },
+            { question: "Faaria had 28 dreams... at least how many dreams involved both monkeys and squirrels?", options: ["4", "7", "8", "10"], correct: 1 },
+            { question: "The lengths of three consecutive sides of a ______ could be 3, 3, and 8.", options: ["Rectangle", "cube", "Hexagon", "trapezoid"], correct: 3 },
+            { question: "I have 500 pennies. If I spend 6 pennies a day until I can no longer do so, at the end of one of the days I will have exactly ______ pennies left.", options: ["9", "8", "11", "13"], correct: 1 },
+            { question: "A 'combo' ticket... a person must go on at least ______ rides.", options: ["5", "4", "8", "9"], correct: 1 },
+            { question: "The ones digit of 9 × 8 × 7 × 6 × 5 × 4 × 3 × 3 × 4 × 5 × 6 × 7 × 8 × 9 is", options: ["0", "8", "10", "12"], correct: 0 },
+            { question: "A football team scores an average of 31 points per game in its first four games and 30 in its first five games. How many points in its fifth game?", options: ["26", "30", "34", "38"], correct: 0 },
+            { question: "The 7 people in my mailbox leave... There are ______ different orders.", options: ["5", "7", "9", "10"], correct: 3 },
+            { question: "Mo and Jo have a total of 120 coins; Bo and Ko have 153; and Mo and Bo have 127. In all, Jo and Ko have ______ coins.", options: ["110", "130", "145", "146"], correct: 3 },
+            { question: "The largest perimeter a rectangle made of 100 2x2 squares can have is", options: ["78", "200", "300", "404"], correct: 3 },
+            { question: "Of the following numbers, which is closest to 10.98?", options: ["11.00", "11.90", "11.95", "11.00"], correct: 0 },
+            { question: "√(4 × 9 × 16) =", options: ["8", "24", "39", "37"], correct: 1 },
+            { question: "Mr. Barry is angry. He has 4 grubs left after he tried to divide 256 grubs equally among his cubs. There could be ______ cubs.", options: ["8", "6", "9", "12"], correct: 1 },
+            { question: "The tenths digit of ______ is larger than its hundredths digit.", options: ["543.21", "241.24", "754.60", "842.40"], correct: 0 },
+            { question: "3² + 3² + 3² =", options: ["3³", "4⁶", "5³", "8⁶"], correct: 0 },
+            { question: "3 ÷ 1/6 = 9 ÷ ______", options: ["1/18", "1/12", "1/2", "9/2"], correct: 2 },
+            { question: "The greatest common factor of 2013 and ______ is 11.", options: ["321", "370", "418", "642"], correct: 2 },
+            { question: "Three times a certain number is 36. One-third of that certain number is", options: ["4", "16", "46", "110"], correct: 0 },
+            { question: "If a case of eggs contains 12 dozen eggs, how many eggs are in two crates of 12 cases each?", options: ["46", "1556", "2275", "3456"], correct: 3 },
+            { question: "One hundred million divided by ten thousand equals", options: ["100000", "10", "1", "10 000"], correct: 3 }
+        ];
+
+        // ----- State -----
+        let db = null;
+        let firebaseReady = false;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let quizSubmitted = false;
+        let autoScore = 0;
+        let studentAnswers = {};
+        let correctionState = {};
+        let currentStudentId = '';
+        let teacherButtonRevealed = false;
+        let teacherUnlocked = false;
+        let currentStudentData = null;
+
+        // ----- DOM -----
+        const $ = id => document.getElementById(id);
+        const studentNameInput = $('studentName');
+        const timerDisplay = $('timerDisplay');
+        const questionsContainer = $('questionsContainer');
+        const submitBtn = $('submitBtn');
+        const resetBtn = $('resetBtn');
+        const resultBox = $('resultBox');
+        const scoreDisplay = $('scoreDisplay');
+        const totalDisplay = $('totalDisplay');
+        const studentNameDisplay = $('studentNameDisplay');
+        const timeTakenDisplay = $('timeTakenDisplay');
+        const cloudSaveStatus = $('cloudSaveStatus');
+        const cloudStatus = $('cloudStatus');
+
+        // ----- Firebase Init -----
+        function initFirebase() {
+            try {
+                if (!firebaseConfig.apiKey || firebaseConfig.apiKey === 'YOUR_API_KEY_HERE') {
+                    console.warn('⚠️ Firebase config not set. Running in offline mode.');
+                    updateCloudStatus('offline', 'Offline (config missing)');
+                    return;
+                }
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+                firebaseReady = true;
+                updateCloudStatus('online', '● Cloud Connected');
+
+                // Test connection
+                db.ref('.info/connected').on('value', snap => {
+                    if (snap.val() === true) {
+                        updateCloudStatus('online', '● Cloud Connected');
+                    } else {
+                        updateCloudStatus('syncing', '● Reconnecting...');
+                    }
+                });
+            } catch (e) {
+                console.error('Firebase init error:', e);
+                updateCloudStatus('offline', '● Offline');
+            }
+        }
+
+        function updateCloudStatus(type, text) {
+            cloudStatus.className = 'status-badge status-' + (type === 'online' ? 'online' : type === 'syncing' ? 'syncing' : 'offline');
+            cloudStatus.textContent = text;
+        }
+
+        // ----- Render Questions -----
+        function renderQuestions() {
+            questionsContainer.innerHTML = '';
+            questionsData.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `<div class="question-text"><strong>Q${index + 1}.</strong> ${q.question}</div>`;
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                q.options.forEach((opt, i) => {
+                    const label = document.createElement('label');
+                    label.className = 'option';
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = `q${index}`;
+                    radio.value = i;
+                    radio.addEventListener('change', function() {
+                        this.closest('.options').querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+                        this.closest('.option').classList.add('selected');
+                    });
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(opt));
+                    optionsDiv.appendChild(label);
+                });
+                card.appendChild(optionsDiv);
+                questionsContainer.appendChild(card);
+            });
+            totalDisplay.textContent = questionsData.length;
+            $('teacherTotalQ').textContent = questionsData.length;
+        }
+
+        // ----- Timer -----
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            secondsElapsed = 0;
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+        function updateTimerDisplay() {
+            const m = Math.floor(secondsElapsed / 60);
+            const s = secondsElapsed % 60;
+            timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return m === 0 ? `${s} seconds` : `${m} min ${s} sec`;
+        }
+
+        // ----- Submit Test -----
+        async function submitTest() {
+            if (quizSubmitted) return;
+            const name = studentNameInput.value.trim();
+            if (!name) { alert('Please enter your name before submitting.'); studentNameInput.focus(); return; }
+
+            stopTimer();
+            quizSubmitted = true;
+
+            autoScore = 0;
+            studentAnswers = {};
+            questionsData.forEach((q, i) => {
+                const sel = document.querySelector(`input[name="q${i}"]:checked`);
+                const val = sel ? parseInt(sel.value) : -1;
+                studentAnswers[i] = val;
+                if (val === q.correct) autoScore++;
+            });
+
+            const studentId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
+            const submission = {
+                id: studentId,
+                name: name,
+                timestamp: Date.now(),
+                timeTaken: secondsElapsed,
+                autoScore: autoScore,
+                total: questionsData.length,
+                answers: studentAnswers,
+                corrected: false,
+                finalScore: autoScore
+            };
+
+            // Save to Firebase
+            if (firebaseReady && db) {
+                try {
+                    cloudSaveStatus.textContent = '☁️ Saving to cloud...';
+                    await db.ref('submissions/' + studentId).set(submission);
+                    cloudSaveStatus.innerHTML = '<span style="color:#38a169;">✅ Saved to cloud successfully</span>';
+                } catch (e) {
+                    console.error('Cloud save failed:', e);
+                    cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud save failed. Ask teacher to check connection.</span>';
+                }
+            } else {
+                cloudSaveStatus.innerHTML = '<span style="color:#e53e3e;">⚠️ Cloud not configured. Test not saved.</span>';
+            }
+
+            // Display result
+            studentNameDisplay.textContent = `Student: ${name}`;
+            scoreDisplay.textContent = autoScore;
+            totalDisplay.textContent = questionsData.length;
+            timeTakenDisplay.textContent = `Time taken: ${formatTime(secondsElapsed)}`;
+            resultBox.style.display = 'block';
+
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.disabled = true);
+            submitBtn.disabled = true;
+            studentNameInput.disabled = true;
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // ----- Reset -----
+        function resetTest() {
+            stopTimer();
+            secondsElapsed = 0;
+            updateTimerDisplay();
+            quizSubmitted = false;
+            autoScore = 0;
+            studentAnswers = {};
+            currentStudentId = '';
+            document.querySelectorAll('input[type="radio"]').forEach(el => { el.checked = false; el.disabled = false; });
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            studentNameInput.value = '';
+            studentNameInput.disabled = false;
+            resultBox.style.display = 'none';
+            submitBtn.disabled = false;
+            cloudSaveStatus.textContent = '';
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ----- QR Code -----
+        function generateQRCode() {
+            const url = window.location.href;
+            $('qrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(url)}`;
+            $('qrUrlBox').textContent = url;
+        }
+
+        // ----- Teacher Passcode -----
+        function showPasscodeModal() {
+            $('passcodeInput').value = '';
+            $('passcodeError').textContent = '';
+            $('passcodeModal').classList.add('active');
+            setTimeout(() => $('passcodeInput').focus(), 100);
+        }
+
+        function verifyPasscode() {
+            const entered = $('passcodeInput').value.trim();
+            if (entered === TEACHER_PASSCODE) {
+                teacherUnlocked = true;
+                $('passcodeModal').classList.remove('active');
+                openTeacherPanel();
+            } else {
+                $('passcodeError').textContent = '❌ Incorrect passcode. Try again.';
+                $('passcodeInput').value = '';
+                $('passcodeInput').focus();
+            }
+        }
+
+        // ----- Teacher Panel -----
+        function openTeacherPanel() {
+            if (!teacherUnlocked) { showPasscodeModal(); return; }
+            $('teacherPanel').classList.add('active');
+            showStudentList();
+        }
+
+        function showStudentList() {
+            $('studentListView').style.display = 'block';
+            $('studentDetailView').style.display = 'none';
+            loadStudentsFromCloud();
+        }
+
+        function loadStudentsFromCloud() {
+            if (!firebaseReady || !db) {
+                $('studentList').innerHTML = '<div class="no-students">⚠️ Cloud not connected. Cannot load students.</div>';
+                return;
+            }
+            $('studentList').innerHTML = '<div class="loading">☁️ Loading from cloud...</div>';
+            db.ref('submissions').on('value', snapshot => {
+                const data = snapshot.val() || {};
+                renderStudentList(data);
+            }, error => {
+                console.error('Read error:', error);
+                $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading from cloud.</div>';
+            });
+        }
+
+        function renderStudentList(data) {
+            const filter = ($('searchInput').value || '').toLowerCase().trim();
+            let list = Object.values(data);
+            if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter));
+            list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            $('studentCount').textContent = list.length;
+            const container = $('studentList');
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                container.innerHTML = '<div class="no-students">No tests submitted yet.</div>';
+                return;
+            }
+
+            list.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                if (s.id === currentStudentId) card.classList.add('active');
+                const correctedLabel = s.corrected
+                    ? '<span class="s-corrected">✓ Corrected</span>'
+                    : '<span style="color:#a0aec0;">Pending</span>';
+                card.innerHTML = `
+                    <div class="s-name">
+                        <span>${escapeHtml(s.name)}</span>
+                        <span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span>
+                    </div>
+                    <div class="s-meta">
+                        <span>${new Date(s.timestamp).toLocaleString()}</span>
+                        ${correctedLabel}
+                    </div>
+                `;
+                card.addEventListener('click', () => showStudentDetail(s));
+                container.appendChild(card);
+            });
+        }
+
+        function showStudentDetail(student) {
+            currentStudentId = student.id;
+            currentStudentData = student;
+            studentAnswers = student.answers || {};
+            correctionState = student.corrections || {};
+            autoScore = student.autoScore;
+
+            questionsData.forEach((q, i) => {
+                if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === q.correct);
+            });
+
+            $('teacherStudentName').textContent = student.name;
+            $('teacherAutoScore').textContent = `${student.autoScore} / ${questionsData.length}`;
+            $('teacherTimeTaken').textContent = formatTime(student.timeTaken);
+            renderTeacherCorrectionList();
+            updateAdjustedScore();
+
+            $('studentListView').style.display = 'none';
+            $('studentDetailView').style.display = 'block';
+        }
+
+        function renderTeacherCorrectionList() {
+            const container = $('teacherQuestionsContainer');
+            container.innerHTML = '';
+            questionsData.forEach((q, i) => {
+                const studentAns = studentAnswers[i];
+                const studentAnsText = studentAns >= 0 ? q.options[studentAns] : 'Not Answered';
+                const correctAnsText = q.options[q.correct];
+                const row = document.createElement('div');
+                row.className = 'teacher-question-row';
+                row.innerHTML = `
+                    <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.question.replace(/<[^>]*>/g, '').substring(0, 100)}${q.question.length > 100 ? '...' : ''}</div>
+                    <div class="teacher-ans-detail">
+                        <span>Student: <span class="student-ans">${escapeHtml(studentAnsText)}</span></span>
+                        <span>Correct: <span class="correct-ans">${escapeHtml(correctAnsText)}</span></span>
+                        <span class="teacher-toggle">
+                            <input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}>
+                            <span>Mark Correct</span>
+                        </span>
+                    </div>
+                    <div class="teacher-feedback">
+                        <input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}">
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    correctionState[parseInt(this.dataset.index)] = this.checked;
+                    updateAdjustedScore();
+                });
+            });
+        }
+
+        function updateAdjustedScore() {
+            let adjusted = 0;
+            Object.keys(correctionState).forEach(k => { if (correctionState[k]) adjusted++; });
+            $('teacherAdjustedScore').textContent = `${adjusted} / ${questionsData.length}`;
+            $('teacherFinalScore').textContent = adjusted;
+        }
+
+        async function saveCorrection() {
+            if (!currentStudentId || !firebaseReady) { alert('Cannot save. Cloud not connected.'); return; }
+            const feedbacks = {};
+            document.querySelectorAll('.teacher-feedback input').forEach(input => {
+                feedbacks[parseInt(input.dataset.index)] = input.value.trim();
+            });
+            let finalScore = 0;
+            Object.keys(correctionState).forEach(k => { if (correctionState[k]) finalScore++; });
+
+            try {
+                await db.ref('submissions/' + currentStudentId).update({
+                    corrections: correctionState,
+                    feedbacks: feedbacks,
+                    corrected: true,
+                    finalScore: finalScore,
+                    correctedAt: Date.now()
+                });
+                alert(`✅ Correction saved to cloud for ${currentStudentData.name}!\nFinal Score: ${finalScore} / ${questionsData.length}`);
+            } catch (e) {
+                console.error(e);
+                alert('Error saving correction to cloud.');
+            }
+        }
+
+        function printCorrectionReport() {
+            if (!currentStudentData) return;
+            const s = currentStudentData;
+            const w = window.open('', '_blank', 'width=900,height=700');
+            let html = `<html><head><title>Correction Report - ${escapeHtml(s.name)}</title>
+                <style>body{font-family:Arial;padding:20px}.summary{background:#fffaf0;padding:15px;border-radius:8px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.correct{color:#276749;font-weight:bold}.incorrect{color:#c53030;font-weight:bold}.feedback{font-style:italic;color:#4a5568;font-size:0.85rem}</style></head><body>
+                <h1>📝 Correction Report</h1>
+                <div class="summary">
+                    <p><b>Student:</b> ${escapeHtml(s.name)}</p>
+                    <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
+                    <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
+                    <p><b>Time Taken:</b> ${formatTime(s.timeTaken)}</p>
+                    <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p>
+                </div>
+                <table><thead><tr><th>#</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
+            questionsData.forEach((q, i) => {
+                const sa = s.answers[i];
+                const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === q.correct);
+                const feedback = (s.feedbacks && s.feedbacks[i]) || '';
+                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'Not Answered')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅ Correct' : '❌ Incorrect'}</td><td class="feedback">${escapeHtml(feedback)}</td></tr>`;
+            });
+            html += `</tbody></table><p style="margin-top:20px;font-size:0.8rem;color:#888;">Generated on ${new Date().toLocaleString()}</p></body></html>`;
+            w.document.write(html);
+            w.document.close();
+            setTimeout(() => w.print(), 500);
+        }
+
+        async function deleteCurrentStudent() {
+            if (!currentStudentId || !firebaseReady) return;
+            if (!confirm(`Delete test for "${currentStudentData.name}" from cloud? This cannot be undone.`)) return;
+            try {
+                await db.ref('submissions/' + currentStudentId).remove();
+                currentStudentId = '';
+                currentStudentData = null;
+                showStudentList();
+            } catch (e) {
+                alert('Error deleting from cloud.');
+            }
+        }
+
+        async function clearAllSubmissions() {
+            if (!firebaseReady) { alert('Cloud not connected.'); return; }
+            if (!confirm('⚠️ Delete ALL submissions from the cloud? This cannot be undone.')) return;
+            if (!confirm('Are you REALLY sure? This will wipe all student tests.')) return;
+            try {
+                await db.ref('submissions').remove();
+                showStudentList();
+            } catch (e) {
+                alert('Error clearing cloud data.');
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        // ----- Event Listeners -----
+        submitBtn.addEventListener('click', submitTest);
+        resetBtn.addEventListener('click', resetTest);
+
+        $('qrBtn').addEventListener('click', () => { generateQRCode(); $('qrModal').classList.add('active'); });
+        $('qrCloseBtn').addEventListener('click', () => $('qrModal').classList.remove('active'));
+        $('copyUrlBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                $('copyUrlBtn').textContent = '✅ Copied!';
+                setTimeout(() => $('copyUrlBtn').textContent = '📋 Copy Link', 2000);
+            });
+        });
+        $('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').classList.remove('active'); });
+
+        $('teacherFab').addEventListener('click', openTeacherPanel);
+        $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
+        $('backBtn').addEventListener('click', showStudentList);
+        $('searchInput').addEventListener('input', () => {
+            if (firebaseReady && db) {
+                db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
+            }
+        });
+        $('clearAllBtn').addEventListener('click', clearAllSubmissions);
+        $('saveCorrectionBtn').addEventListener('click', saveCorrection);
+        $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
+        $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
+
+        $('passcodeSubmit').addEventListener('click', verifyPasscode);
+        $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
+        $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
+
+        // Keyboard shortcut for teacher
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'T' || e.key === 't')) {
+                e.preventDefault();
+                teacherButtonRevealed = true;
+                $('teacherFab').classList.add('visible');
+                if (teacherUnlocked) openTeacherPanel();
+                else showPasscodeModal();
+            }
+        });
+
+        $('teacherPanel').addEventListener('click', e => { if (e.target === $('teacherPanel')) $('teacherPanel').classList.remove('active'); });
+        studentNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+
+        // ----- Init -----
+        renderQuestions();
+        startTimer();
+        initFirebase();
+    </script>
+</body>
+</html>
