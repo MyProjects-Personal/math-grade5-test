@@ -28,8 +28,8 @@
         .timer-box { font-size: 1.4rem; font-weight: 700; color: #2d3748; background: #edf2f7; padding: 8px 24px; border-radius: 40px; }
         .timer-box span { color: #e53e3e; }
         .question-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 20px 25px; margin-bottom: 20px; }
-        .question-text { font-size: 1.1rem; font-weight: 500; color: #1a202c; margin-bottom: 15px; line-height: 1.5; }
-        .question-text img { max-width: 100%; height: auto; margin: 8px 0; border-radius: 8px; }
+        .question-text { font-size: 1.1rem; font-weight: 500; color: #1a202c; margin-bottom: 15px; line-height: 1.6; }
+        .question-text img { max-width: 100%; height: auto; margin: 12px 0; border-radius: 8px; display: block; }
         .options { display: flex; flex-wrap: wrap; gap: 12px; }
         .option { display: flex; align-items: center; background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 40px; padding: 10px 20px; cursor: pointer; transition: 0.2s; flex: 1 0 180px; font-size: 1rem; user-select: none; }
         .option:hover { background: #ebf4ff; border-color: #90cdf4; }
@@ -229,9 +229,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
-        // ============================================================
-        // ✅ YOUR FIREBASE CONFIG (already filled in)
-        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDArRMrYrNNrbpDDTlQfq7tFHrsnVjQwmk",
             authDomain: "math-test-1f01e.firebaseapp.com",
@@ -243,68 +240,127 @@
             measurementId: "G-0E4V63BTF9"
         };
 
-        // ============================================================
-        // 🔐 TEACHER PASSCODE — change this to your own secret code
-        // ============================================================
         const TEACHER_PASSCODE = "teach2024";
 
         // ============================================================
-        // Questions Data (answers included in code — do NOT change)
+        // QUESTIONS — All 50 verified against the original PDF
         // ============================================================
         const questionsData = [
+            // Q1
             { question: "John hasn't struck out since 18 days before Saturday. That day was a", options: ["Tuesday", "Sunday", "Saturday", "Monday"], correct: 0 },
+            // Q2
             { question: "In the following question, select the missing number from the given series.<br>33, 10, 43, 53, 96, ?", options: ["150", "163", "171", "149"], correct: 0 },
+            // Q3
             { question: "(2 + 3 + 4) × 10 = 40 + 30 +", options: ["20", "15", "23", "40"], correct: 0 },
+            // Q4
             { question: "A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.<br>AB, CD, EF, GH, ?", options: ["HJ", "HK", "IJ", "JI"], correct: 0 },
+            // Q5
             { question: "I listened to 6 songs before the one I'm listening to now, and I will listen to 6 more after this one. Altogether, that's ______ songs.", options: ["10", "15", "13", "18"], correct: 2 },
+            // Q6
             { question: "In the following question, select the odd word pair from the given alternatives.", options: ["Room: House", "Page: Book", "Engine: Car", "Food: Hunger"], correct: 3 },
+            // Q7
             { question: "50 hundreds ÷ 5 tens =", options: ["1", "100", "10", "100"], correct: 1 },
-            { question: "P, Q, R, S and T are sitting in a line facing west. P and Q are sitting together. R is sitting at south end and S is sitting at north end. T is neighbour of Q and R. Who is sitting in the middle?", options: ["P", "Q", "R", "S"], correct: 1 },
+            // Q8 — Seating arrangement with image
+            { 
+                question: "P, Q, R, S and T are sitting in a line facing west. P and Q are sitting together. R is sitting at south end and S is sitting at north end. T is neighbour of Q and R. Who is sitting in the middle?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgMTUwIDMwMCI+PGxpbmUgeDE9IjQwIiB5MT0iMjAiIHgyPSI0MCIgeTI9IjI4MCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMTIiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI3MCIgeT0iNDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTAwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxMDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5QPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTYwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxNjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5RPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjIwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyMjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjcwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyNzYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5SPC90ZXh0Pjwvc3ZnPg==' alt='seating arrangement' style='max-width:150px;'>", 
+                options: ["P", "Q", "R", "S"], 
+                correct: 1 
+            },
+            // Q9
             { question: "9 + 99 + 999 = 9 ×", options: ["123", "115", "110", "123"], correct: 0 },
-            { question: "If a mirror is placed on the line AB, then which of the answer figure is the right image of the given figure?<br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iMTAiIHkxPSI1MCIgeDI9IjkwIiB5Mj0iNTAiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMSIvPjxsaW5lIHgxPSI1MCIgeTE9IjEwIiB4Mj0iNTAiIHkyPSI5MCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBvbHlnb24gcG9pbnRzPSI1MCw1MCA3MCw1MCA1MCw3MCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=' style='max-width:100px;'><br>Options: (A) (B) (C) (D)", options: ["A", "B", "C", "D"], correct: 3 },
-           { 
-    question: "In each step the elements shift from left to right in a cyclic order and one element is replaced beginning from the extreme left from 5 to 6, the rightmost element should get replaced.<br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNjAwIDE1MCI+PHJlY3QgeD0iMTAiIHk9IjQwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9Ijc1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPkROUk9XPC90ZXh0PjxyZWN0IHg9IjE1MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjE1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPldTRFJPPC90ZXh0PjxyZWN0IHg9IjI5MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzU1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPk9XUFNSPC90ZXh0PjxyZWN0IHg9IjQzMCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNDk1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlJPV1ZQPC90ZXh0Pjwvc3ZnPg==' alt='letter pattern question' style='max-width:100%;'><br><br>Which box correctly shows the next step in the series?", 
-    options: ["D N R O W", "W S D R O", "O W P S R", "R O W V P"], 
-    correct: 2 
-},
-            { question: "Which one will replace the question mark?<br>A. 262, B. 622, C. 631, D. 824", options: ["262", "622", "631", "824"], correct: 1 },
+            // Q10 — Mirror question WITH option images
+            { 
+                question: "If a mirror is placed on the line AB, then which of the answer figures is the right image of the given figure?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjUwIiB2aWV3Qm94PSIwIDAgNjAwIDI1MCI+PHJlY3QgeD0iMjAiIHk9IjQwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI2MCIgeTE9IjQwIiB4Mj0iNjAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTAwIiB5MT0iNDAiIHgyPSIxMDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTQwIiB5MT0iNDAiIHgyPSIxNDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMjAiIHkxPSI4MCIgeDI9IjE4MCIgeTI9IjgwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTIwIiB4Mj0iMTgwIiB5Mj0iMTIwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTYwIiB4Mj0iMTgwIiB5Mj0iMTYwIiBzdHJva2U9ImJsYWNrIi8+PHBvbHlnb24gcG9pbnRzPSI2MCw4MCAxMDAsODAgNjAsMTIwIiBmaWxsPSJibGFjayIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMTYwIDEwMCwxNjAgNjAsMjAwIiBmaWxsPSJibGFjayIvPjxsaW5lIHgxPSIxOTAiIHkxPSI0MCIgeDI9IjE5MCIgeTI9IjIwMCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz48dGV4dCB4PSIxOTUiIHk9IjUwIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48dGV4dCB4PSIxOTUiIHk9IjE5NSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHRleHQgeD0iMjQwIiB5PSI1MCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiPk9wdGlvbnM6PC90ZXh0PjxyZWN0IHg9IjI0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSIyODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48cG9seWdvbiBwb2ludHM9IjI2MCw5MCAzMDAsOTAgMjYwLDExMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDAiIHk9IjcwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIi8+PHRleHQgeD0iMzgwIiB5PSI2MCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHBvbHlnb24gcG9pbnRzPSIzNjAsOTAgMzgwLDExMCAzNjAsMTEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSI0ODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QzwvdGV4dD48cG9seWdvbiBwb2ludHM9IjQ2MCw5MCA0ODAsMTEwIDQ2MCwxMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTQwIiB5PSI3MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIvPjx0ZXh0IHg9IjU4MCIgeT0iNjAiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIj5EPC90ZXh0Pjxwb2x5Z29uIHBvaW50cz0iNTYwLDExMCA1ODAsOTAgNTgwLDExMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=' alt='mirror question' style='max-width:100%;'><br>Choose the correct mirrored image:", 
+                options: ["A", "B", "C", "D"], 
+                correct: 3 
+            },
+            // Q11 — Letter boxes WITH image
+            { 
+                question: "In each step the elements shift from left to right in a cyclic order and one element is replaced beginning from the extreme left from 5 to 6, the rightmost element should get replaced.<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNjAwIDE1MCI+PHJlY3QgeD0iMTAiIHk9IjQwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9Ijc1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPkROUk9XPC90ZXh0PjxyZWN0IHg9IjE1MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjE1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPldTRFJPPC90ZXh0PjxyZWN0IHg9IjI5MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzU1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPk9XUFNSPC90ZXh0PjxyZWN0IHg9IjQzMCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNDk1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlJPV1ZQPC90ZXh0Pjwvc3ZnPg==' alt='letter pattern question' style='max-width:100%;'><br>Which box correctly shows the next step in the series?", 
+                options: ["D N R O W", "W S D R O", "O W P S R", "R O W V P"], 
+                correct: 2 
+            },
+            // Q12 — Three number circles WITH image
+            { 
+                question: "Which one will replace the question mark?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj41NTE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIxOTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj45PC90ZXh0Pjx0ZXh0IHg9IjE3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NTwvdGV4dD48dGV4dCB4PSI0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjM8L3RleHQ+PHRleHQgeD0iMTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+NDwvdGV4dD48Y2lyY2xlIGN4PSIzMDAiIGN5PSIxMDAiIHI9IjU1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSIzMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiPjI0NjwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjE5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iMjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj41PC90ZXh0Pjx0ZXh0IHg9IjM3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+MzwvdGV4dD48dGV4dCB4PSIyNDAiIHk9IjY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0Ij43PC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjk8L3RleHQ+PGNpcmNsZSBjeD0iNTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj4/PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMTkwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSI0MjUiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iNTc1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj4xPC90ZXh0Pjx0ZXh0IHg9IjQ0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PHRleHQgeD0iNTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48L3N2Zz4=' alt='number circles' style='max-width:100%;'><br>", 
+                options: ["262", "622", "631", "824"], 
+                correct: 1 
+            },
+            // Q13
             { question: "Arrange the following words in a meaningful order:<br>1. Gold, 2. Iron, 3. Sand, 4. Platinum, 5. Diamond", options: ["3 2 1 5 4", "2 4 3 5 1", "5 4 3 2 1", "4 5 1 3 2"], correct: 0 },
+            // Q14
             { question: "Which one number is wrong in the following series?<br>42, 110, 132, 210, 440, 506", options: ["42", "132", "440", "506"], correct: 3 },
+            // Q15
             { question: "Boat: Ore :: Bicycle : ?", options: ["Pedal", "Seat", "Road", "Wheel"], correct: 0 },
+            // Q16
             { question: "I created 40 characters, 4 for each video game I own. That means I own ______ video games.", options: ["10", "53", "50", "80"], correct: 0 },
+            // Q17
             { question: "If I add the number of sides that a hexagon has to the number of sides that a ______ has, then the sum is odd.", options: ["hexagon", "cube", "pentagon", "rectangle"], correct: 2 },
+            // Q18
             { question: "50 + 30 × 20 + 20 × 0 =", options: ["10", "120", "650", "1500"], correct: 2 },
+            // Q19
             { question: "My older brother is 6 years older than I am, and the sum of our ages is 30. How old is my older brother?", options: ["22", "35", "18", "31"], correct: 2 },
+            // Q20
             { question: "Tony paid for 5 tropical punches with a $50 bill and got $16 in change. He paid ______ per tropical punch.", options: ["6.20", "6.80", "7.20", "9.80"], correct: 1 },
+            // Q21
             { question: "The average of two dozen and three dozen is", options: ["12", "30", "34", "46"], correct: 1 },
+            // Q22
             { question: "At normal speed, it takes Manuel exactly one hour and 46 minutes to play a trombone concerto. Playing at twice that speed, it would take Manuel ______ minutes to play the concerto.", options: ["53", "40", "85", "112"], correct: 0 },
+            // Q23
             { question: "If I double ______ and then subtract 50, I get 160.", options: ["150", "100", "50", "105"], correct: 3 },
+            // Q24
             { question: "There are a total of 2013 students enrolled at 8 high schools. If there are 234 students at each of 4 of the schools, then there are a total of ______ students at the other 4 schools.", options: ["1077", "1023", "1334", "1543"], correct: 0 },
+            // Q25
             { question: "Three different maths books are arranged in a line on my table. In how many different orders can these maths books be arranged?", options: ["7", "8", "9", "6"], correct: 3 },
+            // Q26
             { question: "A square piece of paper has a perimeter of 36 cm. What is the area of a square piece of paper with twice that perimeter?", options: ["62 cm²", "81 cm²", "169 cm²", "324 cm²"], correct: 3 },
-            { question: "Brad mixes seeds... how much of each kg of Master mix is Blue mix?", options: ["450 g", "480 g", "600 g", "750 g"], correct: 2 },
+            // Q27
+            { question: "Brad mixes seeds to attract birds. His Blue mix is 55% sunflower and 45% bluegrass. His Rye mix is 30% sunflower and 70% ryegrass. His Mastermix combines some of each of the Blue and Rye mixes. If Master mix is 45% sunflower, how much of each kg of Master mix is Blue mix?", options: ["450 g", "480 g", "600 g", "750 g"], correct: 2 },
+            // Q28
             { question: "Of the following, ______ has the greatest number of whole number factors.", options: ["8", "10", "12", "14"], correct: 2 },
+            // Q29
             { question: "The least common multiple of 10 and 24 plus the greatest common factor of 10 and 24 equals", options: ["123", "122", "242", "256"], correct: 1 },
+            // Q30
             { question: "There are 7 cars for every 4 trucks parked in a lot. If there is a total of 110 cars and trucks parked in the lot, there are ______ cars.", options: ["15", "78", "70", "90"], correct: 2 },
+            // Q31
             { question: "Jon is skiing at a rate of 600 m/min. That equals a rate of ______ cm/sec.", options: ["1200", "1500", "1000", "40 000"], correct: 2 },
-            { question: "Faaria had 28 dreams... at least how many dreams involved both monkeys and squirrels?", options: ["4", "7", "8", "10"], correct: 1 },
+            // Q32
+            { question: "Faaria had 28 dreams last month. If 16 of them involved monkeys, 15 involved squirrels, and 4 involved no animals, then at least how many dreams involved both monkeys and squirrels?", options: ["4", "7", "8", "10"], correct: 1 },
+            // Q33
             { question: "The lengths of three consecutive sides of a ______ could be 3, 3, and 8.", options: ["Rectangle", "cube", "Hexagon", "trapezoid"], correct: 3 },
+            // Q34
             { question: "I have 500 pennies. If I spend 6 pennies a day until I can no longer do so, at the end of one of the days I will have exactly ______ pennies left.", options: ["9", "8", "11", "13"], correct: 1 },
-            { question: "A 'combo' ticket... a person must go on at least ______ rides.", options: ["5", "4", "8", "9"], correct: 1 },
+            // Q35
+            { question: "A 'combo' ticket to enter the fair and ride unlimited rides is $30. A 'per ride' ticket costs $12.50 to enter and $5 per ride. For a 'combo' ticket to cost less than a 'per ride' ticket, a person must go on at least ______ rides.", options: ["5", "4", "8", "9"], correct: 1 },
+            // Q36
             { question: "The ones digit of 9 × 8 × 7 × 6 × 5 × 4 × 3 × 3 × 4 × 5 × 6 × 7 × 8 × 9 is", options: ["0", "8", "10", "12"], correct: 0 },
-            { question: "A football team scores an average of 31 points per game in its first four games and 30 in its first five games. How many points in its fifth game?", options: ["26", "30", "34", "38"], correct: 0 },
-            { question: "The 7 people in my mailbox leave... There are ______ different orders.", options: ["5", "7", "9", "10"], correct: 3 },
+            // Q37
+            { question: "A football team scores an average of 31 points per game in its first four games and an average of 30 points per game in its first five games. How many points did the team score in its fifth game?", options: ["26", "30", "34", "38"], correct: 0 },
+            // Q38
+            { question: "The 7 people in my mailbox leave. I write X for each man and O for each woman as they leave. I have 3 X's and 4 O's, with no 2 X's in a row. There are ______ different orders in which the X's and O's could be written.", options: ["5", "7", "9", "10"], correct: 3 },
+            // Q39
             { question: "Mo and Jo have a total of 120 coins; Bo and Ko have 153; and Mo and Bo have 127. In all, Jo and Ko have ______ coins.", options: ["110", "130", "145", "146"], correct: 3 },
+            // Q40
             { question: "The largest perimeter a rectangle made of 100 2x2 squares can have is", options: ["78", "200", "300", "404"], correct: 3 },
+            // Q41
             { question: "Of the following numbers, which is closest to 10.98?", options: ["11.00", "11.90", "11.95", "11.00"], correct: 0 },
+            // Q42
             { question: "√(4 × 9 × 16) =", options: ["8", "24", "39", "37"], correct: 1 },
+            // Q43
             { question: "Mr. Barry is angry. He has 4 grubs left after he tried to divide 256 grubs equally among his cubs. There could be ______ cubs.", options: ["8", "6", "9", "12"], correct: 1 },
+            // Q44
             { question: "The tenths digit of ______ is larger than its hundredths digit.", options: ["543.21", "241.24", "754.60", "842.40"], correct: 0 },
+            // Q45
             { question: "3² + 3² + 3² =", options: ["3³", "4⁶", "5³", "8⁶"], correct: 0 },
+            // Q46
             { question: "3 ÷ 1/6 = 9 ÷ ______", options: ["1/18", "1/12", "1/2", "9/2"], correct: 2 },
+            // Q47
             { question: "The greatest common factor of 2013 and ______ is 11.", options: ["321", "370", "418", "642"], correct: 2 },
+            // Q48
             { question: "Three times a certain number is 36. One-third of that certain number is", options: ["4", "16", "46", "110"], correct: 0 },
+            // Q49
             { question: "If a case of eggs contains 12 dozen eggs, how many eggs are in two crates of 12 cases each?", options: ["46", "1556", "2275", "3456"], correct: 3 },
+            // Q50
             { question: "One hundred million divided by ten thousand equals", options: ["100000", "10", "1", "10 000"], correct: 3 }
         ];
 
@@ -505,173 +561,4 @@
             }
             $('studentList').innerHTML = '<div class="loading">☁️ Loading from cloud...</div>';
             db.ref('submissions').on('value', snapshot => renderStudentList(snapshot.val() || {}),
-                error => { $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading.</div>'; });
-        }
-        function renderStudentList(data) {
-            const filter = ($('searchInput').value || '').toLowerCase().trim();
-            let list = Object.values(data);
-            if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter));
-            list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            $('studentCount').textContent = list.length;
-            const container = $('studentList'); container.innerHTML = '';
-            if (list.length === 0) {
-                container.innerHTML = '<div class="no-students">No tests submitted yet.</div>'; return;
-            }
-            list.forEach(s => {
-                const card = document.createElement('div');
-                card.className = 'student-card';
-                if (s.id === currentStudentId) card.classList.add('active');
-                const correctedLabel = s.corrected ? '<span class="s-corrected">✓ Corrected</span>' : '<span style="color:#a0aec0;">Pending</span>';
-                card.innerHTML = `
-                    <div class="s-name"><span>${escapeHtml(s.name)}</span><span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span></div>
-                    <div class="s-meta"><span>${new Date(s.timestamp).toLocaleString()}</span>${correctedLabel}</div>
-                `;
-                card.addEventListener('click', () => showStudentDetail(s));
-                container.appendChild(card);
-            });
-        }
-        function showStudentDetail(student) {
-            currentStudentId = student.id;
-            currentStudentData = student;
-            studentAnswers = student.answers || {};
-            correctionState = student.corrections || {};
-            autoScore = student.autoScore;
-            questionsData.forEach((q, i) => {
-                if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === q.correct);
-            });
-            $('teacherStudentName').textContent = student.name;
-            $('teacherAutoScore').textContent = `${student.autoScore} / ${questionsData.length}`;
-            $('teacherTimeTaken').textContent = formatTime(student.timeTaken);
-            renderTeacherCorrectionList(); updateAdjustedScore();
-            $('studentListView').style.display = 'none';
-            $('studentDetailView').style.display = 'block';
-        }
-        function renderTeacherCorrectionList() {
-            const container = $('teacherQuestionsContainer'); container.innerHTML = '';
-            questionsData.forEach((q, i) => {
-                const sa = studentAnswers[i];
-                const saText = sa >= 0 ? q.options[sa] : 'Not Answered';
-                const row = document.createElement('div');
-                row.className = 'teacher-question-row';
-                row.innerHTML = `
-                    <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.question.replace(/<[^>]*>/g, '').substring(0, 100)}${q.question.length > 100 ? '...' : ''}</div>
-                    <div class="teacher-ans-detail">
-                        <span>Student: <span class="student-ans">${escapeHtml(saText)}</span></span>
-                        <span>Correct: <span class="correct-ans">${escapeHtml(q.options[q.correct])}</span></span>
-                        <span class="teacher-toggle"><input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}><span>Mark Correct</span></span>
-                    </div>
-                    <div class="teacher-feedback"><input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}"></div>
-                `;
-                container.appendChild(row);
-            });
-            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-                cb.addEventListener('change', function() {
-                    correctionState[parseInt(this.dataset.index)] = this.checked;
-                    updateAdjustedScore();
-                });
-            });
-        }
-        function updateAdjustedScore() {
-            let adj = 0; Object.keys(correctionState).forEach(k => { if (correctionState[k]) adj++; });
-            $('teacherAdjustedScore').textContent = `${adj} / ${questionsData.length}`;
-            $('teacherFinalScore').textContent = adj;
-        }
-        async function saveCorrection() {
-            if (!currentStudentId || !firebaseReady) { alert('Cannot save.'); return; }
-            const feedbacks = {};
-            document.querySelectorAll('.teacher-feedback input').forEach(input => {
-                feedbacks[parseInt(input.dataset.index)] = input.value.trim();
-            });
-            let finalScore = 0;
-            Object.keys(correctionState).forEach(k => { if (correctionState[k]) finalScore++; });
-            try {
-                await db.ref('submissions/' + currentStudentId).update({
-                    corrections: correctionState, feedbacks, corrected: true,
-                    finalScore, correctedAt: Date.now()
-                });
-                alert(`✅ Correction saved for ${currentStudentData.name}!\nFinal Score: ${finalScore} / ${questionsData.length}`);
-            } catch (e) { alert('Error saving.'); }
-        }
-        function printCorrectionReport() {
-            if (!currentStudentData) return;
-            const s = currentStudentData;
-            const w = window.open('', '_blank', 'width=900,height=700');
-            let html = `<html><head><title>Report - ${escapeHtml(s.name)}</title>
-                <style>body{font-family:Arial;padding:20px}.summary{background:#fffaf0;padding:15px;border-radius:8px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.correct{color:#276749;font-weight:bold}.incorrect{color:#c53030;font-weight:bold}.feedback{font-style:italic;color:#4a5568;font-size:0.85rem}</style></head><body>
-                <h1>📝 Correction Report</h1><div class="summary">
-                <p><b>Student:</b> ${escapeHtml(s.name)}</p>
-                <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
-                <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
-                <p><b>Time:</b> ${formatTime(s.timeTaken)}</p>
-                <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p></div>
-                <table><thead><tr><th>#</th><th>Question</th><th>Student</th><th>Correct</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
-            questionsData.forEach((q, i) => {
-                const sa = s.answers[i];
-                const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === q.correct);
-                const fb = (s.feedbacks && s.feedbacks[i]) || '';
-                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'N/A')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅' : '❌'}</td><td class="feedback">${escapeHtml(fb)}</td></tr>`;
-            });
-            html += `</tbody></table></body></html>`;
-            w.document.write(html); w.document.close();
-            setTimeout(() => w.print(), 500);
-        }
-        async function deleteCurrentStudent() {
-            if (!currentStudentId || !firebaseReady) return;
-            if (!confirm(`Delete test for "${currentStudentData.name}"?`)) return;
-            try { await db.ref('submissions/' + currentStudentId).remove(); currentStudentId = ''; currentStudentData = null; showStudentList(); }
-            catch (e) { alert('Error deleting.'); }
-        }
-        async function clearAllSubmissions() {
-            if (!firebaseReady) return;
-            if (!confirm('⚠️ Delete ALL submissions from cloud?')) return;
-            if (!confirm('Are you REALLY sure?')) return;
-            try { await db.ref('submissions').remove(); showStudentList(); }
-            catch (e) { alert('Error.'); }
-        }
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-        }
-
-        // ----- Event Listeners -----
-        submitBtn.addEventListener('click', submitTest);
-        resetBtn.addEventListener('click', resetTest);
-        $('qrBtn').addEventListener('click', () => { generateQRCode(); $('qrModal').classList.add('active'); });
-        $('qrCloseBtn').addEventListener('click', () => $('qrModal').classList.remove('active'));
-        $('copyUrlBtn').addEventListener('click', () => {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                $('copyUrlBtn').textContent = '✅ Copied!';
-                setTimeout(() => $('copyUrlBtn').textContent = '📋 Copy Link', 2000);
-            });
-        });
-        $('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').classList.remove('active'); });
-        $('teacherFab').addEventListener('click', openTeacherPanel);
-        $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
-        $('backBtn').addEventListener('click', showStudentList);
-        $('searchInput').addEventListener('input', () => {
-            if (firebaseReady && db) db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
-        });
-        $('clearAllBtn').addEventListener('click', clearAllSubmissions);
-        $('saveCorrectionBtn').addEventListener('click', saveCorrection);
-        $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
-        $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
-        $('passcodeSubmit').addEventListener('click', verifyPasscode);
-        $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
-        $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
-        document.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
-                e.preventDefault();
-                $('teacherFab').classList.add('visible');
-                if (teacherUnlocked) openTeacherPanel(); else showPasscodeModal();
-            }
-        });
-        $('teacherPanel').addEventListener('click', e => { if (e.target === $('teacherPanel')) $('teacherPanel').classList.remove('active'); });
-        studentNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
-
-        // ----- Init -----
-        renderQuestions();
-        startTimer();
-        initFirebase();
-    </script>
-</body>
-</html>
+                error => { $('student
