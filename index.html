@@ -561,4 +561,193 @@
             }
             $('studentList').innerHTML = '<div class="loading">☁️ Loading from cloud...</div>';
             db.ref('submissions').on('value', snapshot => renderStudentList(snapshot.val() || {}),
-                error => { $('student
+                error => { $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading.</div>'; });
+        }
+        function renderStudentList(data) {
+            const filter = ($('searchInput').value || '').toLowerCase().trim();
+            let list = Object.values(data);
+            if (filter) list = list.filter(s => s.name.toLowerCase().includes(filter));
+            list.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            $('studentCount').textContent = list.length;
+            const container = $('studentList'); container.innerHTML = '';
+            if (list.length === 0) {
+                container.innerHTML = '<div class="no-students">No tests submitted yet.</div>'; return;
+            }
+            list.forEach(s => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                if (s.id === currentStudentId) card.classList.add('active');
+                const correctedLabel = s.corrected ? '<span class="s-corrected">✓ Corrected</span>' : '<span style="color:#a0aec0;">Pending</span>';
+                card.innerHTML = `
+                    <div class="s-name"><span>${escapeHtml(s.name)}</span><span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span></div>
+                    <div class="s-meta"><span>${new Date(s.timestamp).toLocaleString()}</span>${correctedLabel}</div>
+                `;
+                card.addEventListener('click', () => showStudentDetail(s));
+                container.appendChild(card);
+            });
+        }
+        function showStudentDetail(student) {
+            currentStudentId = student.id;
+            currentStudentData = student;
+            studentAnswers = student.answers || {};
+            correctionState = student.corrections || {};
+            autoScore = student.autoScore;
+            questionsData.forEach((q, i) => {
+                if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === q.correct);
+            });
+            $('teacherStudentName').textContent = student.name;
+            $('teacherAutoScore').textContent = `${student.autoScore} / ${questionsData.length}`;
+            $('teacherTimeTaken').textContent = formatTime(student.timeTaken);
+            renderTeacherCorrectionList(); updateAdjustedScore();
+            $('studentListView').style.display = 'none';
+            $('studentDetailView').style.display = 'block';
+        }
+        function renderTeacherCorrectionList() {
+            const container = $('teacherQuestionsContainer'); container.innerHTML = '';
+            questionsData.forEach((q, i) => {
+                const sa = studentAnswers[i];
+                const saText = sa >= 0 ? q.options[sa] : 'Not Answered';
+                const row = document.createElement('div');
+                row.className = 'teacher-question-row';
+                row.innerHTML = `
+                    <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.question.replace(/<[^>]*>/g, '').substring(0, 100)}${q.question.length > 100 ? '...' : ''}</div>
+                    <div class="teacher-ans-detail">
+                        <span>Student: <span class="student-ans">${escapeHtml(saText)}</span></span>
+                        <span>Correct: <span class="correct-ans">${escapeHtml(q.options[q.correct])}</span></span>
+                        <span class="teacher-toggle"><input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}><span>Mark Correct</span></span>
+                    </div>
+                    <div class="teacher-feedback"><input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}"></div>
+                `;
+                container.appendChild(row);
+            });
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    correctionState[parseInt(this.dataset.index)] = this.checked;
+                    updateAdjustedScore();
+                });
+            });
+        }
+        function updateAdjustedScore() {
+            let adj = 0; Object.keys(correctionState).forEach(k => { if (correctionState[k]) adj++; });
+            $('teacherAdjustedScore').textContent = `${adj} / ${questionsData.length}`;
+            $('teacherFinalScore').textContent = adj;
+        }
+        async function saveCorrection() {
+            if (!currentStudentId || !firebaseReady) { alert('Cannot save.'); return; }
+            const feedbacks = {};
+            document.querySelectorAll('.teacher-feedback input').forEach(input => {
+                feedbacks[parseInt(input.dataset.index)] = input.value.trim();
+            });
+            let finalScore = 0;
+            Object.keys(correctionState).forEach(k => { if (correctionState[k]) finalScore++; });
+            try {
+                await db.ref('submissions/' + currentStudentId).update({
+                    corrections: correctionState, feedbacks, corrected: true,
+                    finalScore, correctedAt: Date.now()
+                });
+                alert(`✅ Correction saved for ${currentStudentData.name}!\nFinal Score: ${finalScore} / ${questionsData.length}`);
+            } catch (e) { alert('Error saving.'); }
+        }
+        function printCorrectionReport() {
+            if (!currentStudentData) return;
+            const s = currentStudentData;
+            const w = window.open('', '_blank', 'width=900,height=700');
+            let html = `<html><head><title>Report - ${escapeHtml(s.name)}</title>
+                <style>body{font-family:Arial;padding:20px}.summary{background:#fffaf0;padding:15px;border-radius:8px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.correct{color:#276749;font-weight:bold}.incorrect{color:#c53030;font-weight:bold}.feedback{font-style:italic;color:#4a5568;font-size:0.85rem}</style></head><body>
+                <h1>📝 Correction Report</h1><div class="summary">
+                <p><b>Student:</b> ${escapeHtml(s.name)}</p>
+                <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
+                <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
+                <p><b>Time:</b> ${formatTime(s.timeTaken)}</p>
+                <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p></div>
+                <table><thead><tr><th>#</th><th>Question</th><th>Student</th><th>Correct</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
+            questionsData.forEach((q, i) => {
+                const sa = s.answers[i];
+                const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === q.correct);
+                const fb = (s.feedbacks && s.feedbacks[i]) || '';
+                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'N/A')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅' : '❌'}</td><td class="feedback">${escapeHtml(fb)}</td></tr>`;
+            });
+            html += `</tbody></table></body></html>`;
+            w.document.write(html); w.document.close();
+            setTimeout(() => w.print(), 500);
+        }
+        async function deleteCurrentStudent() {
+            if (!currentStudentId || !firebaseReady) return;
+            if (!confirm(`Delete test for "${currentStudentData.name}"?`)) return;
+            try { await db.ref('submissions/' + currentStudentId).remove(); currentStudentId = ''; currentStudentData = null; showStudentList(); }
+            catch (e) { alert('Error deleting.'); }
+        }
+        async function clearAllSubmissions() {
+            if (!firebaseReady) return;
+            if (!confirm('⚠️ Delete ALL submissions from cloud?')) return;
+            if (!confirm('Are you REALLY sure?')) return;
+            try { await db.ref('submissions').remove(); showStudentList(); }
+            catch (e) { alert('Error.'); }
+        }
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        // ----- Event Listeners -----
+        submitBtn.addEventListener('click', submitTest);
+        resetBtn.addEventListener('click', resetTest);
+        $('qrBtn').addEventListener('click', () => { generateQRCode(); $('qrModal').classList.add('active'); });
+        $('qrCloseBtn').addEventListener('click', () => $('qrModal').classList.remove('active'));
+        $('copyUrlBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                $('copyUrlBtn').textContent = '✅ Copied!';
+                setTimeout(() => $('copyUrlBtn').textContent = '📋 Copy Link', 2000);
+            });
+        });
+        $('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').classList.remove('active'); });
+        $('teacherFab').addEventListener('click', openTeacherPanel);
+        $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
+        $('backBtn').addEventListener('click', showStudentList);
+        $('searchInput').addEventListener('input', () => {
+            if (firebaseReady && db) db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
+        });
+        $('clearAllBtn').addEventListener('click', clearAllSubmissions);
+        $('saveCorrectionBtn').addEventListener('click', saveCorrection);
+        $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
+        $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
+        $('passcodeSubmit').addEventListener('click', verifyPasscode);
+        $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
+        $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
+
+        // Keyboard shortcut: Ctrl/Cmd + Shift + L
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
+                e.preventDefault();
+                $('teacherFab').classList.add('visible');
+                if (teacherUnlocked) openTeacherPanel(); else showPasscodeModal();
+            }
+        });
+
+        // 5-Tap on title for mobile
+        let titleTapCount = 0;
+        let titleTapTimer = null;
+        const titleEl = document.querySelector('h1');
+        titleEl.style.cursor = 'pointer';
+        titleEl.style.userSelect = 'none';
+        titleEl.addEventListener('click', () => {
+            titleTapCount++;
+            clearTimeout(titleTapTimer);
+            titleTapTimer = setTimeout(() => { titleTapCount = 0; }, 1500);
+            if (titleTapCount >= 5) {
+                titleTapCount = 0;
+                $('teacherFab').classList.add('visible');
+                if (teacherUnlocked) openTeacherPanel(); else showPasscodeModal();
+            }
+        });
+
+        $('teacherPanel').addEventListener('click', e => { if (e.target === $('teacherPanel')) $('teacherPanel').classList.remove('active'); });
+        studentNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+
+        // ----- Init -----
+        renderQuestions();
+        startTimer();
+        initFirebase();
+    </script>
+</body>
+</html>
