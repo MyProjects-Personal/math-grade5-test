@@ -655,7 +655,7 @@
         $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
         $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
         document.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'T' || e.key === 't')) {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
                 e.preventDefault();
                 $('teacherFab').classList.add('visible');
                 if (teacherUnlocked) openTeacherPanel(); else showPasscodeModal();
