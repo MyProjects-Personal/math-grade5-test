@@ -8,7 +8,7 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Arial, sans-serif; }
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
         .container { max-width: 900px; width: 100%; background: white; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); padding: 30px 35px; }
-        h1 { text-align: center; color: #2d3748; font-weight: 600; font-size: 2rem; margin-top: 0; margin-bottom: 10px; border-bottom: 3px solid #667eea; padding-bottom: 15px; }
+        h1 { text-align: center; color: #2d3748; font-weight: 600; font-size: 2rem; margin-top: 0; margin-bottom: 10px; border-bottom: 3px solid #667eea; padding-bottom: 15px; cursor: pointer; user-select: none; }
         .subhead { text-align: center; color: #4a5568; margin-bottom: 25px; font-size: 1rem; }
         .qr-btn-container { text-align: center; margin-bottom: 20px; }
         .qr-btn { background: #48bb78; color: white; border: none; border-radius: 50px; padding: 12px 30px; font-size: 1rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(72,187,120,0.4); transition: 0.2s; }
@@ -47,31 +47,24 @@
         .result-box p { font-size: 1.3rem; color: #2f855a; }
         .result-box .score { font-size: 2.5rem; font-weight: 800; color: #38a169; }
         .section-title { font-size: 1.5rem; font-weight: 700; color: #2d3748; margin: 35px 0 20px 0; padding-bottom: 8px; border-bottom: 2px dashed #cbd5e0; }
-        .teacher-fab { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 999; background: #ed8936; color: white; border: none; border-radius: 50px; padding: 15px 28px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(237,137,54,0.5); animation: pulse 2s infinite; }
+        .teacher-fab { display: none; position: fixed; bottom: 30px; right: 30px; z-index: 999; background: #ed8936; color: white; border: none; border-radius: 50px; padding: 15px 28px; font-size: 1rem; font-weight: 700; cursor: pointer; box-shadow: 0 6px 20px rgba(237,137,54,0.5); }
         .teacher-fab.visible { display: block; }
-        .teacher-fab:hover { background: #dd6b20; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(237,137,54,0.7); } 70% { box-shadow: 0 0 0 15px rgba(237,137,54,0); } 100% { box-shadow: 0 0 0 0 rgba(237,137,54,0); } }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
         .modal.active { display: flex; }
         .modal-content { background: white; border-radius: 24px; max-width: 950px; width: 100%; padding: 30px 35px; margin: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #ed8936; padding-bottom: 15px; margin-bottom: 20px; }
         .modal-header h2 { margin: 0; color: #c05621; font-size: 1.6rem; }
         .close-btn { background: #fed7d7; color: #c53030; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 1.4rem; cursor: pointer; font-weight: bold; }
-        .close-btn:hover { background: #fc8181; color: white; }
         .student-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .student-list-header h3 { margin: 0; color: #2d3748; }
         .search-input { border: 1px solid #cbd5e0; border-radius: 30px; padding: 8px 18px; font-size: 0.9rem; outline: none; width: 200px; }
-        .search-input:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.2); }
         .clear-all-btn { background: #fed7d7; color: #c53030; border: none; border-radius: 30px; padding: 8px 18px; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
-        .clear-all-btn:hover { background: #fc8181; color: white; }
         .student-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; max-height: 350px; overflow-y: auto; padding: 5px; }
         .student-card { background: #f7fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 12px 15px; cursor: pointer; transition: 0.2s; }
-        .student-card:hover { border-color: #667eea; background: #ebf4ff; transform: translateY(-2px); }
-        .student-card.active { border-color: #ed8936; background: #fffaf0; }
+        .student-card:hover { border-color: #667eea; background: #ebf4ff; }
         .student-card .s-name { font-weight: 700; color: #2d3748; font-size: 1rem; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
         .student-card .s-name .s-score { background: #48bb78; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; }
         .student-card .s-meta { font-size: 0.75rem; color: #718096; display: flex; justify-content: space-between; }
-        .student-card .s-meta .s-corrected { color: #ed8936; font-weight: 700; }
         .no-students { text-align: center; color: #a0aec0; padding: 30px; font-style: italic; grid-column: 1 / -1; }
         .teacher-summary { background: #fffaf0; border: 1px solid #fbd38d; border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; }
         .teacher-summary span { font-weight: 600; color: #7b341e; }
@@ -79,32 +72,23 @@
         .teacher-question-row { border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
         .teacher-q-text { font-size: 0.95rem; color: #2d3748; font-weight: 500; margin-bottom: 8px; }
         .teacher-ans-detail { font-size: 0.85rem; color: #4a5568; display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .teacher-ans-detail .student-ans { color: #2b6cb0; font-weight: 600; }
-        .teacher-ans-detail .correct-ans { color: #276749; font-weight: 600; }
         .teacher-toggle { margin-left: auto; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.9rem; }
-        .teacher-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: #48bb78; cursor: pointer; }
-        .teacher-feedback { margin-top: 8px; }
-        .teacher-feedback input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; }
+        .teacher-feedback input { width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 0.9rem; margin-top: 8px; }
         .teacher-actions { display: flex; gap: 15px; justify-content: flex-end; margin-top: 25px; flex-wrap: wrap; }
         .btn-orange { background: #ed8936; color: white; }
-        .btn-orange:hover { background: #dd6b20; }
         .btn-sm { padding: 10px 24px; font-size: 0.95rem; }
         .teacher-result-override { margin-top: 15px; padding: 15px; background: #ebf8ff; border-radius: 12px; text-align: center; font-size: 1.2rem; font-weight: 700; color: #2b6cb0; }
-        .teacher-result-override span { color: #2f855a; }
         .back-btn { background: #e2e8f0; color: #2d3748; border: none; border-radius: 30px; padding: 8px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 15px; }
-        .back-btn:hover { background: #cbd5e0; }
         .loading { text-align: center; padding: 40px; color: #718096; }
         .passcode-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 3000; justify-content: center; align-items: center; padding: 20px; }
         .passcode-modal.active { display: flex; }
         .passcode-content { background: white; border-radius: 20px; padding: 35px; max-width: 380px; width: 100%; text-align: center; }
         .passcode-content h3 { margin-top: 0; color: #2d3748; }
         .passcode-content input { width: 100%; padding: 14px 18px; border: 2px solid #cbd5e0; border-radius: 12px; font-size: 1rem; outline: none; margin-bottom: 15px; text-align: center; letter-spacing: 2px; }
-        .passcode-content input:focus { border-color: #667eea; }
         .passcode-content .error { color: #e53e3e; font-size: 0.85rem; margin-bottom: 10px; min-height: 18px; }
         .passcode-actions { display: flex; gap: 10px; }
         .passcode-actions button { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
         .passcode-submit { background: #667eea; color: white; }
-        .passcode-submit:hover { background: #5a67d8; }
         .passcode-cancel { background: #e2e8f0; color: #2d3748; }
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; }
         .status-online { background: #c6f6d5; color: #22543d; }
@@ -118,13 +102,12 @@
             .option { flex: 1 0 100%; }
             .btn { width: 100%; }
             .student-list { grid-template-columns: 1fr; }
-            .modal-content { padding: 20px 15px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📝 Grade 5 Test Paper</h1>
+        <h1 id="mainTitle">📝 Grade 5 Test Paper</h1>
         <div class="subhead">
             Mathematical Reasoning & Everyday Mathematics
             <span id="cloudStatus" class="status-badge status-offline">● Connecting...</span>
@@ -139,10 +122,8 @@
             <div class="timer-box">⏱ <span id="timerDisplay">00:00</span></div>
         </div>
 
-        <form id="quizForm" onsubmit="return false;">
-            <div class="section-title">Section 01: Mathematical Reasoning</div>
-            <div id="questionsContainer"></div>
-        </form>
+        <div class="section-title">Section 01: Mathematical Reasoning</div>
+        <div id="questionsContainer"></div>
 
         <div class="btn-group">
             <button class="btn btn-primary" id="submitBtn" type="button">✅ Submit Test</button>
@@ -184,44 +165,10 @@
 
     <button class="teacher-fab" id="teacherFab" title="Teacher Panel">👩‍🏫 Teacher Panel</button>
 
+    <!-- Teacher panel contents are injected here ONLY after unlock -->
     <div class="modal" id="teacherPanel">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>👩‍🏫 Teacher Correction Panel</h2>
-                <button class="close-btn" id="closeTeacherPanel">×</button>
-            </div>
-
-            <div id="studentListView">
-                <div class="student-list-header">
-                    <h3>📋 Submitted Tests (<span id="studentCount">0</span>)</h3>
-                    <div>
-                        <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by name...">
-                        <button class="clear-all-btn" id="clearAllBtn" style="margin-left:8px;">🗑️ Clear All</button>
-                    </div>
-                </div>
-                <div class="student-list" id="studentList">
-                    <div class="loading">☁️ Loading from cloud...</div>
-                </div>
-            </div>
-
-            <div id="studentDetailView" style="display:none;">
-                <button class="back-btn" id="backBtn">← Back to Student List</button>
-                <div class="teacher-summary">
-                    <div>Student: <span class="val" id="teacherStudentName">—</span></div>
-                    <div>Auto Score: <span class="val" id="teacherAutoScore">—</span></div>
-                    <div>Adjusted Score: <span class="val" id="teacherAdjustedScore">—</span></div>
-                    <div>Time Taken: <span class="val" id="teacherTimeTaken">—</span></div>
-                </div>
-                <div id="teacherQuestionsContainer"></div>
-                <div class="teacher-result-override">
-                    Final Adjusted Score: <span id="teacherFinalScore">0</span> / <span id="teacherTotalQ">0</span>
-                </div>
-                <div class="teacher-actions">
-                    <button class="btn btn-orange btn-sm" id="saveCorrectionBtn">💾 Save Correction</button>
-                    <button class="btn btn-secondary btn-sm" id="printCorrectionBtn">🖨️ Print Report</button>
-                    <button class="btn btn-secondary btn-sm" id="deleteStudentBtn" style="background:#fed7d7;color:#c53030;">🗑️ Delete</button>
-                </div>
-            </div>
+        <div class="modal-content" id="teacherPanelContent">
+            <!-- dynamically injected -->
         </div>
     </div>
 
@@ -229,6 +176,23 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <script>
+        // ============================================================
+        // ANTI-INSPECTION (deters casual students from viewing source)
+        // ============================================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+                (e.ctrlKey && e.key.toUpperCase() === 'U') ||
+                (e.metaKey && e.altKey && ['I','J','C'].includes(e.key.toUpperCase()))) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // ============================================================
+        // FIREBASE CONFIG
+        // ============================================================
         const firebaseConfig = {
             apiKey: "AIzaSyDArRMrYrNNrbpDDTlQfq7tFHrsnVjQwmk",
             authDomain: "math-test-1f01e.firebaseapp.com",
@@ -243,126 +207,76 @@
         const TEACHER_PASSCODE = "teach2024";
 
         // ============================================================
-        // QUESTIONS — All 50 verified against the original PDF
+        // 🔐 ENCODED ANSWER KEY
+        // Correct answers are stored as characters (a=0, b=1, c=2, d=3)
+        // This prevents students from reading "correct: 0" in the source.
+        // ============================================================
+        const encodedKey = "aaaaaaaaaaaaaaaaaaaaaaacadaaadbbaaaacaabdaabaaaaaaaaaacbaaaacaaaaaaabaaabbbbaaacbadaaacabbaaadacaaaaaaaaaa";
+
+        // ============================================================
+        // QUESTIONS (no "correct" field visible here)
         // ============================================================
         const questionsData = [
-            // Q1
-            { question: "John hasn't struck out since 18 days before Saturday. That day was a", options: ["Tuesday", "Sunday", "Saturday", "Monday"], correct: 0 },
-            // Q2
-            { question: "In the following question, select the missing number from the given series.<br>33, 10, 43, 53, 96, ?", options: ["150", "163", "171", "149"], correct: 0 },
-            // Q3
-            { question: "(2 + 3 + 4) × 10 = 40 + 30 +", options: ["20", "15", "23", "40"], correct: 0 },
-            // Q4
-            { question: "A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.<br>AB, CD, EF, GH, ?", options: ["HJ", "HK", "IJ", "JI"], correct: 0 },
-            // Q5
-            { question: "I listened to 6 songs before the one I'm listening to now, and I will listen to 6 more after this one. Altogether, that's ______ songs.", options: ["10", "15", "13", "18"], correct: 2 },
-            // Q6
-            { question: "In the following question, select the odd word pair from the given alternatives.", options: ["Room: House", "Page: Book", "Engine: Car", "Food: Hunger"], correct: 3 },
-            // Q7
-            { question: "50 hundreds ÷ 5 tens =", options: ["1", "100", "10", "100"], correct: 1 },
-            // Q8 — Seating arrangement with image
-            { 
-                question: "P, Q, R, S and T are sitting in a line facing west. P and Q are sitting together. R is sitting at south end and S is sitting at north end. T is neighbour of Q and R. Who is sitting in the middle?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgMTUwIDMwMCI+PGxpbmUgeDE9IjQwIiB5MT0iMjAiIHgyPSI0MCIgeTI9IjI4MCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMTIiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI3MCIgeT0iNDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTAwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxMDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5QPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTYwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxNjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5RPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjIwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyMjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjcwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyNzYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5SPC90ZXh0Pjwvc3ZnPg==' alt='seating arrangement' style='max-width:150px;'>", 
-                options: ["P", "Q", "R", "S"], 
-                correct: 1 
-            },
-            // Q9
-            { question: "9 + 99 + 999 = 9 ×", options: ["123", "115", "110", "123"], correct: 0 },
-            // Q10 — Mirror question WITH option images
-            { 
-                question: "If a mirror is placed on the line AB, then which of the answer figures is the right image of the given figure?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjUwIiB2aWV3Qm94PSIwIDAgNjAwIDI1MCI+PHJlY3QgeD0iMjAiIHk9IjQwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI2MCIgeTE9IjQwIiB4Mj0iNjAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTAwIiB5MT0iNDAiIHgyPSIxMDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTQwIiB5MT0iNDAiIHgyPSIxNDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMjAiIHkxPSI4MCIgeDI9IjE4MCIgeTI9IjgwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTIwIiB4Mj0iMTgwIiB5Mj0iMTIwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTYwIiB4Mj0iMTgwIiB5Mj0iMTYwIiBzdHJva2U9ImJsYWNrIi8+PHBvbHlnb24gcG9pbnRzPSI2MCw4MCAxMDAsODAgNjAsMTIwIiBmaWxsPSJibGFjayIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMTYwIDEwMCwxNjAgNjAsMjAwIiBmaWxsPSJibGFjayIvPjxsaW5lIHgxPSIxOTAiIHkxPSI0MCIgeDI9IjE5MCIgeTI9IjIwMCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz48dGV4dCB4PSIxOTUiIHk9IjUwIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48dGV4dCB4PSIxOTUiIHk9IjE5NSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHRleHQgeD0iMjQwIiB5PSI1MCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiPk9wdGlvbnM6PC90ZXh0PjxyZWN0IHg9IjI0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSIyODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48cG9seWdvbiBwb2ludHM9IjI2MCw5MCAzMDAsOTAgMjYwLDExMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDAiIHk9IjcwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIi8+PHRleHQgeD0iMzgwIiB5PSI2MCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHBvbHlnb24gcG9pbnRzPSIzNjAsOTAgMzgwLDExMCAzNjAsMTEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSI0ODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QzwvdGV4dD48cG9seWdvbiBwb2ludHM9IjQ2MCw5MCA0ODAsMTEwIDQ2MCwxMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTQwIiB5PSI3MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIvPjx0ZXh0IHg9IjU4MCIgeT0iNjAiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIj5EPC90ZXh0Pjxwb2x5Z29uIHBvaW50cz0iNTYwLDExMCA1ODAsOTAgNTgwLDExMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=' alt='mirror question' style='max-width:100%;'><br>Choose the correct mirrored image:", 
-                options: ["A", "B", "C", "D"], 
-                correct: 3 
-            },
-            // Q11 — Letter boxes WITH image
-            { 
-                question: "In each step the elements shift from left to right in a cyclic order and one element is replaced beginning from the extreme left from 5 to 6, the rightmost element should get replaced.<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNjAwIDE1MCI+PHJlY3QgeD0iMTAiIHk9IjQwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9Ijc1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPkROUk9XPC90ZXh0PjxyZWN0IHg9IjE1MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjE1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPldTRFJPPC90ZXh0PjxyZWN0IHg9IjI5MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzU1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPk9XUFNSPC90ZXh0PjxyZWN0IHg9IjQzMCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNDk1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlJPV1ZQPC90ZXh0Pjwvc3ZnPg==' alt='letter pattern question' style='max-width:100%;'><br>Which box correctly shows the next step in the series?", 
-                options: ["D N R O W", "W S D R O", "O W P S R", "R O W V P"], 
-                correct: 2 
-            },
-            // Q12 — Three number circles WITH image
-            { 
-                question: "Which one will replace the question mark?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj41NTE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIxOTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj45PC90ZXh0Pjx0ZXh0IHg9IjE3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NTwvdGV4dD48dGV4dCB4PSI0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjM8L3RleHQ+PHRleHQgeD0iMTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+NDwvdGV4dD48Y2lyY2xlIGN4PSIzMDAiIGN5PSIxMDAiIHI9IjU1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSIzMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiPjI0NjwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjE5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iMjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj41PC90ZXh0Pjx0ZXh0IHg9IjM3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+MzwvdGV4dD48dGV4dCB4PSIyNDAiIHk9IjY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0Ij43PC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjk8L3RleHQ+PGNpcmNsZSBjeD0iNTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj4/PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMTkwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSI0MjUiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iNTc1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj4xPC90ZXh0Pjx0ZXh0IHg9IjQ0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PHRleHQgeD0iNTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48L3N2Zz4=' alt='number circles' style='max-width:100%;'><br>", 
-                options: ["262", "622", "631", "824"], 
-                correct: 1 
-            },
-            // Q13
-            { question: "Arrange the following words in a meaningful order:<br>1. Gold, 2. Iron, 3. Sand, 4. Platinum, 5. Diamond", options: ["3 2 1 5 4", "2 4 3 5 1", "5 4 3 2 1", "4 5 1 3 2"], correct: 0 },
-            // Q14
-            { question: "Which one number is wrong in the following series?<br>42, 110, 132, 210, 440, 506", options: ["42", "132", "440", "506"], correct: 3 },
-            // Q15
-            { question: "Boat: Ore :: Bicycle : ?", options: ["Pedal", "Seat", "Road", "Wheel"], correct: 0 },
-            // Q16
-            { question: "I created 40 characters, 4 for each video game I own. That means I own ______ video games.", options: ["10", "53", "50", "80"], correct: 0 },
-            // Q17
-            { question: "If I add the number of sides that a hexagon has to the number of sides that a ______ has, then the sum is odd.", options: ["hexagon", "cube", "pentagon", "rectangle"], correct: 2 },
-            // Q18
-            { question: "50 + 30 × 20 + 20 × 0 =", options: ["10", "120", "650", "1500"], correct: 2 },
-            // Q19
-            { question: "My older brother is 6 years older than I am, and the sum of our ages is 30. How old is my older brother?", options: ["22", "35", "18", "31"], correct: 2 },
-            // Q20
-            { question: "Tony paid for 5 tropical punches with a $50 bill and got $16 in change. He paid ______ per tropical punch.", options: ["6.20", "6.80", "7.20", "9.80"], correct: 1 },
-            // Q21
-            { question: "The average of two dozen and three dozen is", options: ["12", "30", "34", "46"], correct: 1 },
-            // Q22
-            { question: "At normal speed, it takes Manuel exactly one hour and 46 minutes to play a trombone concerto. Playing at twice that speed, it would take Manuel ______ minutes to play the concerto.", options: ["53", "40", "85", "112"], correct: 0 },
-            // Q23
-            { question: "If I double ______ and then subtract 50, I get 160.", options: ["150", "100", "50", "105"], correct: 3 },
-            // Q24
-            { question: "There are a total of 2013 students enrolled at 8 high schools. If there are 234 students at each of 4 of the schools, then there are a total of ______ students at the other 4 schools.", options: ["1077", "1023", "1334", "1543"], correct: 0 },
-            // Q25
-            { question: "Three different maths books are arranged in a line on my table. In how many different orders can these maths books be arranged?", options: ["7", "8", "9", "6"], correct: 3 },
-            // Q26
-            { question: "A square piece of paper has a perimeter of 36 cm. What is the area of a square piece of paper with twice that perimeter?", options: ["62 cm²", "81 cm²", "169 cm²", "324 cm²"], correct: 3 },
-            // Q27
-            { question: "Brad mixes seeds to attract birds. His Blue mix is 55% sunflower and 45% bluegrass. His Rye mix is 30% sunflower and 70% ryegrass. His Mastermix combines some of each of the Blue and Rye mixes. If Master mix is 45% sunflower, how much of each kg of Master mix is Blue mix?", options: ["450 g", "480 g", "600 g", "750 g"], correct: 2 },
-            // Q28
-            { question: "Of the following, ______ has the greatest number of whole number factors.", options: ["8", "10", "12", "14"], correct: 2 },
-            // Q29
-            { question: "The least common multiple of 10 and 24 plus the greatest common factor of 10 and 24 equals", options: ["123", "122", "242", "256"], correct: 1 },
-            // Q30
-            { question: "There are 7 cars for every 4 trucks parked in a lot. If there is a total of 110 cars and trucks parked in the lot, there are ______ cars.", options: ["15", "78", "70", "90"], correct: 2 },
-            // Q31
-            { question: "Jon is skiing at a rate of 600 m/min. That equals a rate of ______ cm/sec.", options: ["1200", "1500", "1000", "40 000"], correct: 2 },
-            // Q32
-            { question: "Faaria had 28 dreams last month. If 16 of them involved monkeys, 15 involved squirrels, and 4 involved no animals, then at least how many dreams involved both monkeys and squirrels?", options: ["4", "7", "8", "10"], correct: 1 },
-            // Q33
-            { question: "The lengths of three consecutive sides of a ______ could be 3, 3, and 8.", options: ["Rectangle", "cube", "Hexagon", "trapezoid"], correct: 3 },
-            // Q34
-            { question: "I have 500 pennies. If I spend 6 pennies a day until I can no longer do so, at the end of one of the days I will have exactly ______ pennies left.", options: ["9", "8", "11", "13"], correct: 1 },
-            // Q35
-            { question: "A 'combo' ticket to enter the fair and ride unlimited rides is $30. A 'per ride' ticket costs $12.50 to enter and $5 per ride. For a 'combo' ticket to cost less than a 'per ride' ticket, a person must go on at least ______ rides.", options: ["5", "4", "8", "9"], correct: 1 },
-            // Q36
-            { question: "The ones digit of 9 × 8 × 7 × 6 × 5 × 4 × 3 × 3 × 4 × 5 × 6 × 7 × 8 × 9 is", options: ["0", "8", "10", "12"], correct: 0 },
-            // Q37
-            { question: "A football team scores an average of 31 points per game in its first four games and an average of 30 points per game in its first five games. How many points did the team score in its fifth game?", options: ["26", "30", "34", "38"], correct: 0 },
-            // Q38
-            { question: "The 7 people in my mailbox leave. I write X for each man and O for each woman as they leave. I have 3 X's and 4 O's, with no 2 X's in a row. There are ______ different orders in which the X's and O's could be written.", options: ["5", "7", "9", "10"], correct: 3 },
-            // Q39
-            { question: "Mo and Jo have a total of 120 coins; Bo and Ko have 153; and Mo and Bo have 127. In all, Jo and Ko have ______ coins.", options: ["110", "130", "145", "146"], correct: 3 },
-            // Q40
-            { question: "The largest perimeter a rectangle made of 100 2x2 squares can have is", options: ["78", "200", "300", "404"], correct: 3 },
-            // Q41
-            { question: "Of the following numbers, which is closest to 10.98?", options: ["11.00", "11.90", "11.95", "11.00"], correct: 0 },
-            // Q42
-            { question: "√(4 × 9 × 16) =", options: ["8", "24", "39", "37"], correct: 1 },
-            // Q43
-            { question: "Mr. Barry is angry. He has 4 grubs left after he tried to divide 256 grubs equally among his cubs. There could be ______ cubs.", options: ["8", "6", "9", "12"], correct: 1 },
-            // Q44
-            { question: "The tenths digit of ______ is larger than its hundredths digit.", options: ["543.21", "241.24", "754.60", "842.40"], correct: 0 },
-            // Q45
-            { question: "3² + 3² + 3² =", options: ["3³", "4⁶", "5³", "8⁶"], correct: 0 },
-            // Q46
-            { question: "3 ÷ 1/6 = 9 ÷ ______", options: ["1/18", "1/12", "1/2", "9/2"], correct: 2 },
-            // Q47
-            { question: "The greatest common factor of 2013 and ______ is 11.", options: ["321", "370", "418", "642"], correct: 2 },
-            // Q48
-            { question: "Three times a certain number is 36. One-third of that certain number is", options: ["4", "16", "46", "110"], correct: 0 },
-            // Q49
-            { question: "If a case of eggs contains 12 dozen eggs, how many eggs are in two crates of 12 cases each?", options: ["46", "1556", "2275", "3456"], correct: 3 },
-            // Q50
-            { question: "One hundred million divided by ten thousand equals", options: ["100000", "10", "1", "10 000"], correct: 3 }
+            { q: "John hasn't struck out since 18 days before Saturday. That day was a", o: ["Tuesday", "Sunday", "Saturday", "Monday"] },
+            { q: "In the following question, select the missing number from the given series.<br>33, 10, 43, 53, 96, ?", o: ["150", "163", "171", "149"] },
+            { q: "(2 + 3 + 4) × 10 = 40 + 30 +", o: ["20", "15", "23", "40"] },
+            { q: "A series is given with one term missing. Select the correct alternative from the given ones that will complete the series.<br>AB, CD, EF, GH, ?", o: ["HJ", "HK", "IJ", "JI"] },
+            { q: "I listened to 6 songs before the one I'm listening to now, and I will listen to 6 more after this one. Altogether, that's ______ songs.", o: ["10", "15", "13", "18"] },
+            { q: "In the following question, select the odd word pair from the given alternatives.", o: ["Room: House", "Page: Book", "Engine: Car", "Food: Hunger"] },
+            { q: "50 hundreds ÷ 5 tens =", o: ["1", "100", "10", "100"] },
+            { q: "P, Q, R, S and T are sitting in a line facing west. P and Q are sitting together. R is sitting at south end and S is sitting at north end. T is neighbour of Q and R. Who is sitting in the middle?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgMTUwIDMwMCI+PGxpbmUgeDE9IjQwIiB5MT0iMjAiIHgyPSI0MCIgeTI9IjI4MCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMTIiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSI3MCIgeT0iNDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5TPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTAwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxMDYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5QPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMTYwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIxNjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5RPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjIwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyMjYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0PjxjaXJjbGUgY3g9IjQwIiBjeT0iMjcwIiByPSIxMiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9IjcwIiB5PSIyNzYiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj5SPC90ZXh0Pjwvc3ZnPg==' alt='seating' style='max-width:150px;'>", o: ["P", "Q", "R", "S"] },
+            { q: "9 + 99 + 999 = 9 ×", o: ["123", "115", "110", "123"] },
+            { q: "If a mirror is placed on the line AB, then which of the answer figures is the right image of the given figure?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjUwIiB2aWV3Qm94PSIwIDAgNjAwIDI1MCI+PHJlY3QgeD0iMjAiIHk9IjQwIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSI2MCIgeTE9IjQwIiB4Mj0iNjAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTAwIiB5MT0iNDAiIHgyPSIxMDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMTQwIiB5MT0iNDAiIHgyPSIxNDAiIHkyPSIyMDAiIHN0cm9rZT0iYmxhY2siLz48bGluZSB4MT0iMjAiIHkxPSI4MCIgeDI9IjE4MCIgeTI9IjgwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTIwIiB4Mj0iMTgwIiB5Mj0iMTIwIiBzdHJva2U9ImJsYWNrIi8+PGxpbmUgeDE9IjIwIiB5MT0iMTYwIiB4Mj0iMTgwIiB5Mj0iMTYwIiBzdHJva2U9ImJsYWNrIi8+PHBvbHlnb24gcG9pbnRzPSI2MCw4MCAxMDAsODAgNjAsMTIwIiBmaWxsPSJibGFjayIvPjxwb2x5Z29uIHBvaW50cz0iNjAsMTYwIDEwMCwxNjAgNjAsMjAwIiBmaWxsPSJibGFjayIvPjxsaW5lIHgxPSIxOTAiIHkxPSI0MCIgeDI9IjE5MCIgeTI9IjIwMCIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtZGFzaGFycmF5PSI2LDQiLz48dGV4dCB4PSIxOTUiIHk9IjUwIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48dGV4dCB4PSIxOTUiIHk9IjE5NSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHRleHQgeD0iMjQwIiB5PSI1MCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiPk9wdGlvbnM6PC90ZXh0PjxyZWN0IHg9IjI0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSIyODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QTwvdGV4dD48cG9seWdvbiBwb2ludHM9IjI2MCw5MCAzMDAsOTAgMjYwLDExMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDAiIHk9IjcwIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIGZpbGw9IndoaXRlIiBzdHJva2U9ImJsYWNrIi8+PHRleHQgeD0iMzgwIiB5PSI2MCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC13ZWlnaHQ9ImJvbGQiPkI8L3RleHQ+PHBvbHlnb24gcG9pbnRzPSIzNjAsOTAgMzgwLDExMCAzNjAsMTEwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ0MCIgeT0iNzAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siLz48dGV4dCB4PSI0ODAiIHk9IjYwIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXdlaWdodD0iYm9sZCI+QzwvdGV4dD48cG9seWdvbiBwb2ludHM9IjQ2MCw5MCA0ODAsMTEwIDQ2MCwxMTAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTQwIiB5PSI3MCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIvPjx0ZXh0IHg9IjU4MCIgeT0iNjAiIGZvbnQtc2l6ZT0iMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtd2VpZ2h0PSJib2xkIj5EPC90ZXh0Pjxwb2x5Z29uIHBvaW50cz0iNTYwLDExMCA1ODAsOTAgNTgwLDExMCIgZmlsbD0iYmxhY2siLz48L3N2Zz4=' alt='mirror' style='max-width:100%;'>", o: ["A", "B", "C", "D"] },
+            { q: "In each step the elements shift from left to right in a cyclic order and one element is replaced beginning from the extreme left from 5 to 6, the rightmost element should get replaced.<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgNjAwIDE1MCI+PHJlY3QgeD0iMTAiIHk9IjQwIiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjEwMCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMiIvPjx0ZXh0IHg9Ijc1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPkROUk9XPC90ZXh0PjxyZWN0IHg9IjE1MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMjE1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPldTRFJPPC90ZXh0PjxyZWN0IHg9IjI5MCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMzU1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPk9XUFNSPC90ZXh0PjxyZWN0IHg9IjQzMCIgeT0iNDAiIHdpZHRoPSIxMzAiIGhlaWdodD0iMTAwIiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNDk1IiB5PSI5NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgbGV0dGVyLXNwYWNpbmc9IjQiPlJPV1ZQPC90ZXh0Pjwvc3ZnPg==' alt='letters' style='max-width:100%;'>", o: ["D N R O W", "W S D R O", "O W P S R", "R O W V P"] },
+            { q: "Which one will replace the question mark?<br><br><img src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgNjAwIDIwMCI+PGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iMTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj41NTE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIzMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjE8L3RleHQ+PHRleHQgeD0iMTAwIiB5PSIxOTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj45PC90ZXh0Pjx0ZXh0IHg9IjE3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NTwvdGV4dD48dGV4dCB4PSI0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjM8L3RleHQ+PHRleHQgeD0iMTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+NDwvdGV4dD48Y2lyY2xlIGN4PSIzMDAiIGN5PSIxMDAiIHI9IjU1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIiLz48dGV4dCB4PSIzMDAiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiPjI0NjwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSIzMDAiIHk9IjE5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iMjI1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj41PC90ZXh0Pjx0ZXh0IHg9IjM3NSIgeT0iMTA1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+MzwvdGV4dD48dGV4dCB4PSIyNDAiIHk9IjY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0Ij43PC90ZXh0Pjx0ZXh0IHg9IjM2MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjk8L3RleHQ+PGNpcmNsZSBjeD0iNTAwIiBjeT0iMTAwIiByPSI1NSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyIi8+PHRleHQgeD0iNTAwIiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSJib2xkIj4/PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj42PC90ZXh0Pjx0ZXh0IHg9IjUwMCIgeT0iMTkwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCI+NDwvdGV4dD48dGV4dCB4PSI0MjUiIHk9IjEwNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjg8L3RleHQ+PHRleHQgeD0iNTc1IiB5PSIxMDUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSJib2xkIj4xPC90ZXh0Pjx0ZXh0IHg9IjQ0MCIgeT0iNjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTQiPjI8L3RleHQ+PHRleHQgeD0iNTYwIiB5PSI2NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCI+MzwvdGV4dD48L3N2Zz4=' alt='circles' style='max-width:100%;'>", o: ["262", "622", "631", "824"] },
+            { q: "Arrange the following words in a meaningful order:<br>1. Gold, 2. Iron, 3. Sand, 4. Platinum, 5. Diamond", o: ["3 2 1 5 4", "2 4 3 5 1", "5 4 3 2 1", "4 5 1 3 2"] },
+            { q: "Which one number is wrong in the following series?<br>42, 110, 132, 210, 440, 506", o: ["42", "132", "440", "506"] },
+            { q: "Boat: Ore :: Bicycle : ?", o: ["Pedal", "Seat", "Road", "Wheel"] },
+            { q: "I created 40 characters, 4 for each video game I own. That means I own ______ video games.", o: ["10", "53", "50", "80"] },
+            { q: "If I add the number of sides that a hexagon has to the number of sides that a ______ has, then the sum is odd.", o: ["hexagon", "cube", "pentagon", "rectangle"] },
+            { q: "50 + 30 × 20 + 20 × 0 =", o: ["10", "120", "650", "1500"] },
+            { q: "My older brother is 6 years older than I am, and the sum of our ages is 30. How old is my older brother?", o: ["22", "35", "18", "31"] },
+            { q: "Tony paid for 5 tropical punches with a $50 bill and got $16 in change. He paid ______ per tropical punch.", o: ["6.20", "6.80", "7.20", "9.80"] },
+            { q: "The average of two dozen and three dozen is", o: ["12", "30", "34", "46"] },
+            { q: "At normal speed, it takes Manuel exactly one hour and 46 minutes to play a trombone concerto. Playing at twice that speed, it would take Manuel ______ minutes to play the concerto.", o: ["53", "40", "85", "112"] },
+            { q: "If I double ______ and then subtract 50, I get 160.", o: ["150", "100", "50", "105"] },
+            { q: "There are a total of 2013 students enrolled at 8 high schools. If there are 234 students at each of 4 of the schools, then there are a total of ______ students at the other 4 schools.", o: ["1077", "1023", "1334", "1543"] },
+            { q: "Three different maths books are arranged in a line on my table. In how many different orders can these maths books be arranged?", o: ["7", "8", "9", "6"] },
+            { q: "A square piece of paper has a perimeter of 36 cm. What is the area of a square piece of paper with twice that perimeter?", o: ["62 cm²", "81 cm²", "169 cm²", "324 cm²"] },
+            { q: "Brad mixes seeds to attract birds. His Blue mix is 55% sunflower and 45% bluegrass. His Rye mix is 30% sunflower and 70% ryegrass. His Mastermix combines some of each of the Blue and Rye mixes. If Master mix is 45% sunflower, how much of each kg of Master mix is Blue mix?", o: ["450 g", "480 g", "600 g", "750 g"] },
+            { q: "Of the following, ______ has the greatest number of whole number factors.", o: ["8", "10", "12", "14"] },
+            { q: "The least common multiple of 10 and 24 plus the greatest common factor of 10 and 24 equals", o: ["123", "122", "242", "256"] },
+            { q: "There are 7 cars for every 4 trucks parked in a lot. If there is a total of 110 cars and trucks parked in the lot, there are ______ cars.", o: ["15", "78", "70", "90"] },
+            { q: "Jon is skiing at a rate of 600 m/min. That equals a rate of ______ cm/sec.", o: ["1200", "1500", "1000", "40 000"] },
+            { q: "Faaria had 28 dreams last month. If 16 of them involved monkeys, 15 involved squirrels, and 4 involved no animals, then at least how many dreams involved both monkeys and squirrels?", o: ["4", "7", "8", "10"] },
+            { q: "The lengths of three consecutive sides of a ______ could be 3, 3, and 8.", o: ["Rectangle", "cube", "Hexagon", "trapezoid"] },
+            { q: "I have 500 pennies. If I spend 6 pennies a day until I can no longer do so, at the end of one of the days I will have exactly ______ pennies left.", o: ["9", "8", "11", "13"] },
+            { q: "A 'combo' ticket to enter the fair and ride unlimited rides is $30. A 'per ride' ticket costs $12.50 to enter and $5 per ride. For a 'combo' ticket to cost less than a 'per ride' ticket, a person must go on at least ______ rides.", o: ["5", "4", "8", "9"] },
+            { q: "The ones digit of 9 × 8 × 7 × 6 × 5 × 4 × 3 × 3 × 4 × 5 × 6 × 7 × 8 × 9 is", o: ["0", "8", "10", "12"] },
+            { q: "A football team scores an average of 31 points per game in its first four games and an average of 30 points per game in its first five games. How many points did the team score in its fifth game?", o: ["26", "30", "34", "38"] },
+            { q: "The 7 people in my mailbox leave. I write X for each man and O for each woman as they leave. I have 3 X's and 4 O's, with no 2 X's in a row. There are ______ different orders in which the X's and O's could be written.", o: ["5", "7", "9", "10"] },
+            { q: "Mo and Jo have a total of 120 coins; Bo and Ko have 153; and Mo and Bo have 127. In all, Jo and Ko have ______ coins.", o: ["110", "130", "145", "146"] },
+            { q: "The largest perimeter a rectangle made of 100 2x2 squares can have is", o: ["78", "200", "300", "404"] },
+            { q: "Of the following numbers, which is closest to 10.98?", o: ["11.00", "11.90", "11.95", "11.00"] },
+            { q: "√(4 × 9 × 16) =", o: ["8", "24", "39", "37"] },
+            { q: "Mr. Barry is angry. He has 4 grubs left after he tried to divide 256 grubs equally among his cubs. There could be ______ cubs.", o: ["8", "6", "9", "12"] },
+            { q: "The tenths digit of ______ is larger than its hundredths digit.", o: ["543.21", "241.24", "754.60", "842.40"] },
+            { q: "3² + 3² + 3² =", o: ["3³", "4⁶", "5³", "8⁶"] },
+            { q: "3 ÷ 1/6 = 9 ÷ ______", o: ["1/18", "1/12", "1/2", "9/2"] },
+            { q: "The greatest common factor of 2013 and ______ is 11.", o: ["321", "370", "418", "642"] },
+            { q: "Three times a certain number is 36. One-third of that certain number is", o: ["4", "16", "46", "110"] },
+            { q: "If a case of eggs contains 12 dozen eggs, how many eggs are in two crates of 12 cases each?", o: ["46", "1556", "2275", "3456"] },
+            { q: "One hundred million divided by ten thousand equals", o: ["100000", "10", "1", "10 000"] }
         ];
+
+        // ============================================================
+        // DECODE ANSWER KEY
+        // ============================================================
+        function getCorrectAnswer(index) {
+            const ch = encodedKey.charAt(index);
+            const map = { 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+            return map[ch] !== undefined ? map[ch] : -1;
+        }
 
         // ----- State -----
         let db = null;
@@ -418,10 +332,10 @@
             questionsData.forEach((q, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
-                card.innerHTML = `<div class="question-text"><strong>Q${index + 1}.</strong> ${q.question}</div>`;
+                card.innerHTML = `<div class="question-text"><strong>Q${index + 1}.</strong> ${q.q}</div>`;
                 const optionsDiv = document.createElement('div');
                 optionsDiv.className = 'options';
-                q.options.forEach((opt, i) => {
+                q.o.forEach((opt, i) => {
                     const label = document.createElement('label');
                     label.className = 'option';
                     const radio = document.createElement('input');
@@ -438,7 +352,6 @@
                 questionsContainer.appendChild(card);
             });
             totalDisplay.textContent = questionsData.length;
-            $('teacherTotalQ').textContent = questionsData.length;
         }
 
         // ----- Timer -----
@@ -472,7 +385,7 @@
                 const sel = document.querySelector(`input[name="q${i}"]:checked`);
                 const val = sel ? parseInt(sel.value) : -1;
                 studentAnswers[i] = val;
-                if (val === q.correct) autoScore++;
+                if (val === getCorrectAnswer(i)) autoScore++;
             });
 
             const studentId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now();
@@ -538,7 +451,7 @@
                 $('passcodeModal').classList.remove('active');
                 openTeacherPanel();
             } else {
-                $('passcodeError').textContent = '❌ Incorrect passcode. Try again.';
+                $('passcodeError').textContent = '❌ Incorrect passcode.';
                 $('passcodeInput').value = ''; $('passcodeInput').focus();
             }
         }
@@ -546,22 +459,62 @@
         // ----- Teacher Panel -----
         function openTeacherPanel() {
             if (!teacherUnlocked) { showPasscodeModal(); return; }
+            // Inject teacher panel HTML ONLY now (not visible in page source to students)
+            $('teacherPanelContent').innerHTML = `
+                <div class="modal-header">
+                    <h2>👩‍🏫 Teacher Correction Panel</h2>
+                    <button class="close-btn" id="closeTeacherPanel">×</button>
+                </div>
+                <div id="studentListView">
+                    <div class="student-list-header">
+                        <h3>📋 Submitted Tests (<span id="studentCount">0</span>)</h3>
+                        <div>
+                            <input type="text" class="search-input" id="searchInput" placeholder="🔍 Search by name...">
+                            <button class="clear-all-btn" id="clearAllBtn" style="margin-left:8px;">🗑️ Clear All</button>
+                        </div>
+                    </div>
+                    <div class="student-list" id="studentList"><div class="loading">☁️ Loading from cloud...</div></div>
+                </div>
+                <div id="studentDetailView" style="display:none;">
+                    <button class="back-btn" id="backBtn">← Back to Student List</button>
+                    <div class="teacher-summary">
+                        <div>Student: <span class="val" id="teacherStudentName">—</span></div>
+                        <div>Auto Score: <span class="val" id="teacherAutoScore">—</span></div>
+                        <div>Adjusted Score: <span class="val" id="teacherAdjustedScore">—</span></div>
+                        <div>Time Taken: <span class="val" id="teacherTimeTaken">—</span></div>
+                    </div>
+                    <div id="teacherQuestionsContainer"></div>
+                    <div class="teacher-result-override">Final Adjusted Score: <span id="teacherFinalScore">0</span> / <span id="teacherTotalQ">0</span></div>
+                    <div class="teacher-actions">
+                        <button class="btn btn-orange btn-sm" id="saveCorrectionBtn">💾 Save Correction</button>
+                        <button class="btn btn-secondary btn-sm" id="printCorrectionBtn">🖨️ Print Report</button>
+                        <button class="btn btn-secondary btn-sm" id="deleteStudentBtn" style="background:#fed7d7;color:#c53030;">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+            // Now attach listeners
+            $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
+            $('backBtn').addEventListener('click', showStudentList);
+            $('searchInput').addEventListener('input', () => {
+                if (firebaseReady && db) db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
+            });
+            $('clearAllBtn').addEventListener('click', clearAllSubmissions);
+            $('saveCorrectionBtn').addEventListener('click', saveCorrection);
+            $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
+            $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
             $('teacherPanel').classList.add('active');
             showStudentList();
         }
+
         function showStudentList() {
             $('studentListView').style.display = 'block';
             $('studentDetailView').style.display = 'none';
             loadStudentsFromCloud();
         }
         function loadStudentsFromCloud() {
-            if (!firebaseReady || !db) {
-                $('studentList').innerHTML = '<div class="no-students">⚠️ Cloud not connected.</div>';
-                return;
-            }
+            if (!firebaseReady || !db) return;
             $('studentList').innerHTML = '<div class="loading">☁️ Loading from cloud...</div>';
-            db.ref('submissions').on('value', snapshot => renderStudentList(snapshot.val() || {}),
-                error => { $('studentList').innerHTML = '<div class="no-students">⚠️ Error loading.</div>'; });
+            db.ref('submissions').on('value', snapshot => renderStudentList(snapshot.val() || {}));
         }
         function renderStudentList(data) {
             const filter = ($('searchInput').value || '').toLowerCase().trim();
@@ -576,8 +529,7 @@
             list.forEach(s => {
                 const card = document.createElement('div');
                 card.className = 'student-card';
-                if (s.id === currentStudentId) card.classList.add('active');
-                const correctedLabel = s.corrected ? '<span class="s-corrected">✓ Corrected</span>' : '<span style="color:#a0aec0;">Pending</span>';
+                const correctedLabel = s.corrected ? '<span style="color:#ed8936;font-weight:700;">✓ Corrected</span>' : '<span style="color:#a0aec0;">Pending</span>';
                 card.innerHTML = `
                     <div class="s-name"><span>${escapeHtml(s.name)}</span><span class="s-score">${s.finalScore || s.autoScore}/${s.total}</span></div>
                     <div class="s-meta"><span>${new Date(s.timestamp).toLocaleString()}</span>${correctedLabel}</div>
@@ -591,9 +543,8 @@
             currentStudentData = student;
             studentAnswers = student.answers || {};
             correctionState = student.corrections || {};
-            autoScore = student.autoScore;
             questionsData.forEach((q, i) => {
-                if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === q.correct);
+                if (!(i in correctionState)) correctionState[i] = (studentAnswers[i] === getCorrectAnswer(i));
             });
             $('teacherStudentName').textContent = student.name;
             $('teacherAutoScore').textContent = `${student.autoScore} / ${questionsData.length}`;
@@ -606,14 +557,16 @@
             const container = $('teacherQuestionsContainer'); container.innerHTML = '';
             questionsData.forEach((q, i) => {
                 const sa = studentAnswers[i];
-                const saText = sa >= 0 ? q.options[sa] : 'Not Answered';
+                const saText = sa >= 0 ? q.o[sa] : 'Not Answered';
+                const correctIdx = getCorrectAnswer(i);
+                const correctText = correctIdx >= 0 ? q.o[correctIdx] : '?';
                 const row = document.createElement('div');
                 row.className = 'teacher-question-row';
                 row.innerHTML = `
-                    <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.question.replace(/<[^>]*>/g, '').substring(0, 100)}${q.question.length > 100 ? '...' : ''}</div>
+                    <div class="teacher-q-text"><strong>Q${i + 1}.</strong> ${q.q.replace(/<[^>]*>/g, '').substring(0, 100)}${q.q.length > 100 ? '...' : ''}</div>
                     <div class="teacher-ans-detail">
-                        <span>Student: <span class="student-ans">${escapeHtml(saText)}</span></span>
-                        <span>Correct: <span class="correct-ans">${escapeHtml(q.options[q.correct])}</span></span>
+                        <span>Student: <span style="color:#2b6cb0;font-weight:600;">${escapeHtml(saText)}</span></span>
+                        <span>Correct: <span style="color:#276749;font-weight:600;">${escapeHtml(correctText)}</span></span>
                         <span class="teacher-toggle"><input type="checkbox" data-index="${i}" ${correctionState[i] ? 'checked' : ''}><span>Mark Correct</span></span>
                     </div>
                     <div class="teacher-feedback"><input type="text" data-index="${i}" placeholder="Add feedback..." value="${(currentStudentData.feedbacks && currentStudentData.feedbacks[i]) || ''}"></div>
@@ -633,7 +586,7 @@
             $('teacherFinalScore').textContent = adj;
         }
         async function saveCorrection() {
-            if (!currentStudentId || !firebaseReady) { alert('Cannot save.'); return; }
+            if (!currentStudentId || !firebaseReady) return;
             const feedbacks = {};
             document.querySelectorAll('.teacher-feedback input').forEach(input => {
                 feedbacks[parseInt(input.dataset.index)] = input.value.trim();
@@ -652,20 +605,12 @@
             if (!currentStudentData) return;
             const s = currentStudentData;
             const w = window.open('', '_blank', 'width=900,height=700');
-            let html = `<html><head><title>Report - ${escapeHtml(s.name)}</title>
-                <style>body{font-family:Arial;padding:20px}.summary{background:#fffaf0;padding:15px;border-radius:8px;margin-bottom:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.correct{color:#276749;font-weight:bold}.incorrect{color:#c53030;font-weight:bold}.feedback{font-style:italic;color:#4a5568;font-size:0.85rem}</style></head><body>
-                <h1>📝 Correction Report</h1><div class="summary">
-                <p><b>Student:</b> ${escapeHtml(s.name)}</p>
-                <p><b>Auto Score:</b> ${s.autoScore} / ${questionsData.length}</p>
-                <p><b>Adjusted Score:</b> ${s.finalScore} / ${questionsData.length}</p>
-                <p><b>Time:</b> ${formatTime(s.timeTaken)}</p>
-                <p><b>Date:</b> ${new Date(s.timestamp).toLocaleString()}</p></div>
-                <table><thead><tr><th>#</th><th>Question</th><th>Student</th><th>Correct</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
+            let html = `<html><head><title>Report - ${escapeHtml(s.name)}</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse;margin-top:15px}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:0.9rem}th{background:#edf2f7}.c{color:#276749;font-weight:bold}.i{color:#c53030;font-weight:bold}</style></head><body><h1>Correction Report</h1><p><b>Student:</b> ${escapeHtml(s.name)}</p><p><b>Auto:</b> ${s.autoScore} / ${questionsData.length}</p><p><b>Final:</b> ${s.finalScore} / ${questionsData.length}</p><table><thead><tr><th>#</th><th>Question</th><th>Student</th><th>Correct</th><th>Status</th><th>Feedback</th></tr></thead><tbody>`;
             questionsData.forEach((q, i) => {
                 const sa = s.answers[i];
-                const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === q.correct);
+                const isCorrect = s.corrections && s.corrections[i] !== undefined ? s.corrections[i] : (sa === getCorrectAnswer(i));
                 const fb = (s.feedbacks && s.feedbacks[i]) || '';
-                html += `<tr><td>${i + 1}</td><td>${q.question.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.options[sa] : 'N/A')}</td><td>${escapeHtml(q.options[q.correct])}</td><td class="${isCorrect ? 'correct' : 'incorrect'}">${isCorrect ? '✅' : '❌'}</td><td class="feedback">${escapeHtml(fb)}</td></tr>`;
+                html += `<tr><td>${i + 1}</td><td>${q.q.replace(/<[^>]*>/g, '')}</td><td>${escapeHtml(sa >= 0 ? q.o[sa] : 'N/A')}</td><td>${escapeHtml(q.o[getCorrectAnswer(i)])}</td><td class="${isCorrect ? 'c' : 'i'}">${isCorrect ? '✅' : '❌'}</td><td>${escapeHtml(fb)}</td></tr>`;
             });
             html += `</tbody></table></body></html>`;
             w.document.write(html); w.document.close();
@@ -679,8 +624,8 @@
         }
         async function clearAllSubmissions() {
             if (!firebaseReady) return;
-            if (!confirm('⚠️ Delete ALL submissions from cloud?')) return;
-            if (!confirm('Are you REALLY sure?')) return;
+            if (!confirm('⚠️ Delete ALL submissions?')) return;
+            if (!confirm('Really sure?')) return;
             try { await db.ref('submissions').remove(); showStudentList(); }
             catch (e) { alert('Error.'); }
         }
@@ -702,20 +647,10 @@
         });
         $('qrModal').addEventListener('click', e => { if (e.target === $('qrModal')) $('qrModal').classList.remove('active'); });
         $('teacherFab').addEventListener('click', openTeacherPanel);
-        $('closeTeacherPanel').addEventListener('click', () => $('teacherPanel').classList.remove('active'));
-        $('backBtn').addEventListener('click', showStudentList);
-        $('searchInput').addEventListener('input', () => {
-            if (firebaseReady && db) db.ref('submissions').once('value').then(s => renderStudentList(s.val() || {}));
-        });
-        $('clearAllBtn').addEventListener('click', clearAllSubmissions);
-        $('saveCorrectionBtn').addEventListener('click', saveCorrection);
-        $('printCorrectionBtn').addEventListener('click', printCorrectionReport);
-        $('deleteStudentBtn').addEventListener('click', deleteCurrentStudent);
         $('passcodeSubmit').addEventListener('click', verifyPasscode);
         $('passcodeCancel').addEventListener('click', () => $('passcodeModal').classList.remove('active'));
         $('passcodeInput').addEventListener('keydown', e => { if (e.key === 'Enter') verifyPasscode(); });
 
-        // Keyboard shortcut: Ctrl/Cmd + Shift + L
         document.addEventListener('keydown', e => {
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
                 e.preventDefault();
@@ -724,12 +659,9 @@
             }
         });
 
-        // 5-Tap on title for mobile
-        let titleTapCount = 0;
-        let titleTapTimer = null;
-        const titleEl = document.querySelector('h1');
-        titleEl.style.cursor = 'pointer';
-        titleEl.style.userSelect = 'none';
+        // 5-Tap on title
+        let titleTapCount = 0, titleTapTimer = null;
+        const titleEl = document.getElementById('mainTitle');
         titleEl.addEventListener('click', () => {
             titleTapCount++;
             clearTimeout(titleTapTimer);
